@@ -7,4 +7,5 @@ Focuses only on ORM Every scenario is executable + explainable + testable Can be
 فقط روی ORM تمرکز دارد  هر سناریو قابل اجرا + قابل توضیح + قابل تست است  بعداً بشه راحت گسترشش داد (بلاگ، PDF، دوره)
 
 
-## [STEPS](https://exercism.org/profiles/sinalalebakhsh)
+## Steps:
+[Click here...](https://github.com/sinalalebakhsh/Django-ORM-Playground/blob/main/Steps.md)
