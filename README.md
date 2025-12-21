@@ -1,5 +1,6 @@
 # 🚀-Django-ORM-Playground
 Build a Django project that:
+
 Focuses only on ORM Every scenario is executable + explainable + testable Can be easily extended later (blog, PDF, course)
 
 ساختن یک پروژه Django که:  
