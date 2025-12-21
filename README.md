@@ -31,6 +31,12 @@ Ctrl + P
 ```
 Python Select interpreter
 ```
-
+5. Check:
+```
+django-admin --version
+```
+>Result have 6.0 or higher:
+>6.0
+6.
 
 
