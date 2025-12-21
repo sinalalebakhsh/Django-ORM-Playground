@@ -332,7 +332,7 @@ In Admin → Categories → Add
 21. in directory /Django-ORM-Playground/orm_playground
 ```
   python manage.py shell
-  from playground.models import Product
+  from playground.models.product import Product
   Product.objects.count()
 ```
 result:
@@ -425,3 +425,36 @@ price=F('price') * 1.1
 > Whenever the new value of a field depends on the previous value of the same field, **Be sure to use `F()`**.
 
 This is the golden rule of Django ORM.
+
+
+#### ❌ Instinctive but wrong method (many do the same)
+Let's go into the Django shell:
+```
+python manage.py shell
+from playground.models.product import Product
+products = Product.objects.filter(category__name="Electronics")
+```
+```
+for product in products:
+```
+than
+```
+    product.price = product.price * 1.1
+    product.save()
+```
+#####  
+```
+  >>> for product in products:
+  ...     product.price = product.price * 1.1
+  ...     product.save()
+  ... 
+  Traceback (most recent call last):
+    File "<console>", line 2, in <module>
+  TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+```
+## 🧠 نتیجه ذهنی
+| Method | Decimal Problem | Safe | Fast |
+| ---------- | ------------------ | --- | ---- |
+| for + save | ❌ You have to solve manually | ❌ | ❌ |
+| update + F | ✅ Automatic | ✅ | ✅ |
+

@@ -332,7 +332,7 @@ $ python manage.py check
 21. در دایرکتوری /Django-ORM-Playground/orm_playground
 ```
   python manage.py shell
-  from playground.models import Product
+  from playground.models.product import Product
   Product.objects.count()
 ```
 result:
@@ -425,3 +425,35 @@ Product.objects.filter(
 > هر وقت مقدار جدید یک فیلد به مقدار قبلی همان فیلد وابسته است، **حتماً از `F()` استفاده کن**.
 
 این قانون طلایی Django ORM است.
+
+
+#### ❌ روش غریزی ولی اشتباه (خیلی‌ها همینو می‌زنن)
+بریم داخل Django shell:
+```
+python manage.py shell
+from playground.models.product import Product
+products = Product.objects.filter(category__name="Electronics")
+```
+```
+for product in products:
+```
+سپس
+```
+    product.price = product.price * 1.1
+    product.save()
+```
+#####  
+```
+  >>> for product in products:
+  ...     product.price = product.price * 1.1
+  ...     product.save()
+  ... 
+  Traceback (most recent call last):
+    File "<console>", line 2, in <module>
+  TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
+```
+## 🧠 نتیجه ذهنی
+| روش        | مشکل Decimal       | امن | سریع |
+| ---------- | ------------------ | --- | ---- |
+| for + save | ❌ باید دستی حل کنی | ❌   | ❌    |
+| update + F | ✅ خودکار           | ✅   | ✅    |
