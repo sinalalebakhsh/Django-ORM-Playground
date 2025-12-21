@@ -452,7 +452,7 @@ than
     File "<console>", line 2, in <module>
   TypeError: unsupported operand type(s) for *: 'decimal.Decimal' and 'float'
 ```
-## 🧠 نتیجه ذهنی
+## 🧠 Mental result
 | Method | Decimal Problem | Safe | Fast |
 | ---------- | ------------------ | --- | ---- |
 | for + save | ❌ You have to solve manually | ❌ | ❌ |
