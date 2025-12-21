@@ -38,5 +38,22 @@ django-admin --version
 Result have 6.0 or higher:
 >6.0
 6.
+```
+django-admin startproject orm_playground
+```
+7.
+```
+cd orm_playground
+```
+Current structure:
+```
+orm_playground/
+├── orm_playground/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+└── manage.py
+```
 
 
