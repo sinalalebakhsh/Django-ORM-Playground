@@ -294,30 +294,32 @@ $ python manage.py check
 
 #### برای هر دسته حداقل ۳ محصول ایجاد کنید.
 
-* Electronics
->Name: iPhone
->Price: 1000
->Stock: 10
->Active: ✔️
--------------------------------
->Name: Laptop
->Price: 2000
->Stock: 5
->Active: ✔️
--------------------------------
->Name: Headphones
->Price: 200
->Stock: 30
->Active: ✔️
+#### Electronics
 
-* Books
->Name: Django Book
->Price: 50
->Stock: 100
--------------------------------
->Name: Python Deep Dive
->Price: 70
->Stock: 60
+* **Name:** iPhone
+  **Price:** 1000
+  **Stock:** 10
+  **Active:** ✔️
+
+* **Name:** Laptop
+  **Price:** 2000
+  **Stock:** 5
+  **Active:** ✔️
+
+* **Name:** Headphones
+  **Price:** 200
+  **Stock:** 30
+  **Active:** ✔️
+
+#### Books
+
+* **Name:** Django Book
+  **Price:** 50
+  **Stock:** 100
+
+* **Name:** Python Deep Dive
+  **Price:** 70
+  **Stock:** 60
 
 #### چرا این دیتا؟
 * قیمت‌ها متفاوت هستند
@@ -344,3 +346,82 @@ result:
 >now exiting InteractiveConsole...
 
 
+## Scenario 001 – Bulk UPDATE با Django ORM (MySQL)
+
+### هدف سناریو
+
+افزایش قیمت تمام Productهای یک Category مشخص به صورت **Bulk** و بررسی تفاوت روش‌های مختلف UPDATE در Django ORM.
+
+در این سناریو یاد می‌گیریم:
+
+* چرا `save()` برای bulk update خطرناک است
+* چگونه `queryset.update()` کار می‌کند
+* چرا استفاده از `F()` در MySQL حیاتی است
+* مفهوم atomic update و جلوگیری از race condition
+
+---
+
+### سناریو مسئله
+
+فرض کن می‌خواهیم:
+
+> قیمت تمام Productهای دسته **Electronics** را ۱۰٪ افزایش دهیم.
+
+---
+
+### روش اشتباه (برای درک مشکل)
+
+```python
+# ❌ روش نادرست – save() داخل حلقه
+
+products = Product.objects.filter(category__name="Electronics")
+
+for product in products:
+    product.price = product.price * 1.1
+    product.save()
+```
+
+#### مشکلات این روش:
+
+* به ازای هر Product یک Query اجرا می‌شود (N Query)
+* در MySQL مستعد **race condition** است
+* atomic نیست
+* performance ضعیف
+
+---
+
+### روش درست (Bulk UPDATE با F)
+
+```python
+from django.db.models import F
+
+Product.objects.filter(
+    category__name="Electronics"
+).update(
+    price=F('price') * 1.1
+)
+```
+
+#### مزایای این روش:
+
+* فقط **یک Query** به MySQL ارسال می‌شود
+* کاملاً atomic است
+* مقدار قبلی price در خود دیتابیس استفاده می‌شود
+* امن در برابر race condition
+* بهترین انتخاب برای bulk update
+
+---
+
+### نتیجه مورد انتظار
+
+* قیمت تمام Productهای Electronics افزایش پیدا می‌کند
+* هیچ Productی از قلم نمی‌افتد
+* عملیات سریع و ایمن انجام می‌شود
+
+---
+
+### نکته مهم ORM
+
+> هر وقت مقدار جدید یک فیلد به مقدار قبلی همان فیلد وابسته است، **حتماً از `F()` استفاده کن**.
+
+این قانون طلایی Django ORM است.
