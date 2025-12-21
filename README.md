@@ -35,7 +35,7 @@ Python Select interpreter
 ```
 django-admin --version
 ```
->Result have 6.0 or higher:
+Result have 6.0 or higher:
 >6.0
 6.
 
