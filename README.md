@@ -16,3 +16,18 @@ We don't teach ORM like a book → we treat it like a lab.
 
 ### 📌 نکته مهم:
 ما ORM رو مثل کتاب آموزش نمی‌دیم → مثل آزمایشگاه باهاش برخورد می‌کنیم.
+
+
+## 📌 This model is intentionally designed so that:
+F()
+bulk update
+race condition
+performance test
+all methods are executable.
+
+## 📌 این مدل عمداً طوری طراحی شده که:
+F()
+bulk update
+race condition
+performance test
+همه روش قابل اجرا باشه.
