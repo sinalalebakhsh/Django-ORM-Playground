@@ -59,4 +59,22 @@ orm_playground/
 ```
 python manage.py startapp playground
 ```
+Current structure:
+```
+orm_playground/
+├──orm_playground/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+│
+├──manage.py
+│
+├──playground/
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   └── views.py
+```
 
