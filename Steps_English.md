@@ -292,4 +292,37 @@ In Admin → Categories → Add
 
 📌 Intentionally small and specific.
 
+#### Create at least 3 products for each category.
+
+* Electronics
+>Name: iPhone
+>Price: 1000
+>Stock: 10
+>Active: ✔️
+-------------------------------
+>Name: Laptop
+>Price: 2000
+>Stock: 5
+>Active: ✔️
+-------------------------------
+>Name: Headphones
+>Price: 200
+>Stock: 30
+>Active: ✔️
+
+* Books
+>Name: Django Book
+>Price: 50
+>Stock: 100
+-------------------------------
+>Name: Python Deep Dive
+>Price: 70
+>Stock: 60
+
+#### Why this data?
+* Prices are different
+* Stock quantity is different
+* There is more than one category
+* Ideal for testing Bulk Update and ORM scenarios
+
 

@@ -292,4 +292,41 @@ $ python manage.py check
 
 📌 عمداً کم و مشخص.
 
+#### برای هر دسته حداقل ۳ محصول ایجاد کنید.
 
+* Electronics
+>Name: iPhone
+>Price: 1000
+>Stock: 10
+>Active: ✔️
+-------------------------------
+>Name: Laptop
+>Price: 2000
+>Stock: 5
+>Active: ✔️
+-------------------------------
+>Name: Headphones
+>Price: 200
+>Stock: 30
+>Active: ✔️
+
+* Books
+>Name: Django Book
+>Price: 50
+>Stock: 100
+-------------------------------
+>Name: Python Deep Dive
+>Price: 70
+>Stock: 60
+
+#### چرا این دیتا؟
+* قیمت‌ها متفاوت هستند
+* مقدار stock متفاوت است
+* بیش از یک category وجود دارد
+* برای تست Bulk Update و سناریوهای ORM ایده‌آل است
+
+#### Why this data?
+* Prices are different
+* Stock quantity is different
+* There is more than one category
+* Ideal for testing Bulk Update and ORM scenarios
