@@ -238,9 +238,58 @@ Django ORM → MySQL
 >This password is entirely numeric.
 >Bypass password validation and create user anyway? [y/N]: y
 >Superuser created successfully.
-16. بررسی
+
+16. 
+```
+  python manage.py makemigrations
+```
+result:
+>Migrations for 'playground':
+>  playground\migrations\0001_initial.py
+>    + Create model Category
+>    + Create model Product
+17. 
+```
+  python manage.py migrate
+```
+>Operations to perform:
+>  Apply all migrations: admin, auth, contenttypes, playground, sessions
+>Running migrations:
+>  Applying playground.0001_initial... OK
+
+18. بررسی
 ```
 $ python manage.py check
 ```
 نتیجه:
 >بررسی سیستم هیچ مشکلی را شناسایی نکرد (۰ بی‌صدا شد).
+
+19. up server
+```
+  python manage.py runserver
+```
+>Watching for file changes with StatReloader
+>Performing system checks...
+>
+>System check identified no issues (0 silenced).
+>December 21, 2025 - 18:04:19
+>Django version 6.0, using settings 'orm_playground.settings'
+>Starting development server at http://127.0.0.1:8000/
+>Quit the server with CTRL-BREAK.
+>
+>WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+>For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+
+20. داخل پنل ادمین چندتا دیتای فیک بساز
+
+در Admin → Categories → Add
+
+* این‌ها رو بساز (دقیقاً همین‌ها):
+
+* Electronics
+
+* Books
+
+📌 عمداً کم و مشخص.
+
+

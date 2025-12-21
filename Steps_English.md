@@ -238,12 +238,58 @@ result:
 >This password is entirely numeric.
 >Bypass password validation and create user anyway? [y/N]: y
 >Superuser created successfully.
-16.Check
+
+16. 
+```
+  python manage.py makemigrations
+```
+result:
+>Migrations for 'playground':
+>  playground\migrations\0001_initial.py
+>    + Create model Category
+>    + Create model Product
+17. 
+```
+  python manage.py migrate
+```
+>Operations to perform:
+>  Apply all migrations: admin, auth, contenttypes, playground, sessions
+>Running migrations:
+>  Applying playground.0001_initial... OK
+
+18. Check
 ```
   $ python manage.py check
 ```
 result:
 >System check identified no issues (0 silenced).
 
+19. up server
+```
+  python manage.py runserver
+```
+>Watching for file changes with StatReloader
+>Performing system checks...
+>
+>System check identified no issues (0 silenced).
+>December 21, 2025 - 18:04:19
+>Django version 6.0, using settings 'orm_playground.settings'
+>Starting development server at http://127.0.0.1:8000/
+>Quit the server with CTRL-BREAK.
+>
+>WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+>For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+
+20. Create some fake data in the admin panel.
+
+In Admin → Categories → Add
+
+* Create these (exactly):
+
+* Electronics
+
+* Books
+
+📌 Intentionally small and specific.
 
 
