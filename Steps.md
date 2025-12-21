@@ -70,7 +70,7 @@ First project implementation (health check) directory -> /Django-ORM-Playground/
 ```
 python manage.py runserver
 ```
-Result:
+Result in Terminal VScode:
 >Watching for file changes with StatReloader
 >Performing system checks...
 >
