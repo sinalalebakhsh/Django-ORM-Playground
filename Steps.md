@@ -208,8 +208,11 @@ Django ORM → MySQL
 
 #### جدول‌های:
 >auth_user
+>
 >django_migrations
+>
 >sessions
+>
 >admin
 
 دقیقاً با SQL واقعی MySQL ساخته می‌شن
