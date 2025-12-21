@@ -55,5 +55,8 @@ orm_playground/
 │   └── wsgi.py
 └── manage.py
 ```
-
+8. in this directory: /Django-ORM-Playground/orm_playground
+```
+python manage.py startapp playground
+```
 
