@@ -159,6 +159,17 @@ This setup is intentionally chosen to be **professional, reproducible, and publi
 OR
 [Click here...](https://dev.mysql.com/doc/mysql-shell/9.5/en/)
 
+12. Open MySQL 9.5 Command Line Client
+```
+  CREATE DATABASE orm_playground
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+```
+Result:
+>Query OK, 1 row affected (0.160 sec)
+>
+>mysql>
+
 
 
 
