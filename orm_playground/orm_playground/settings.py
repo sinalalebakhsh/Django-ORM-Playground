@@ -83,8 +83,12 @@ DATABASES = {
         'HOST': 'localhost',
         'USER': 'root',
         'PASSWORD': '1234',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        },
     }
 }
+
 
 
 # Password validation
