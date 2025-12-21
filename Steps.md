@@ -207,29 +207,29 @@ Running migrations:
 Django ORM → MySQL
 
 #### جدول‌های:
-    auth_user
-    django_migrations
-    sessions
-    admin
+>auth_user
+>django_migrations
+>sessions
+>admin
 
 دقیقاً با SQL واقعی MySQL ساخته می‌شن
 
 #### 📌 از این لحظه:
-    هر کوئری که بنویسی = SQL واقعی MySQL
+هر کوئری که بنویسی = SQL واقعی MySQL
 
 #### چرا این مرحله برای ORM Playground حیاتی بود؟
-چون از الان به بعد می‌تونیم:
-select_for_update() → lock واقعی
-transaction.atomic() → ACID واقعی
-race condition → واقعی
-performance → واقعی
-نه شبیه‌سازی SQLite ❌
+* **چون از الان به بعد می‌تونیم:**
+* **select_for_update() → lock واقعی**
+* **transaction.atomic() → ACID واقعی**
+* **race condition → واقعی**
+* **performance → واقعی**
+* **نه شبیه‌سازی SQLite ❌**
 
 #### Why was this step crucial for ORM Playground?
-Because from now on we can:
-select_for_update() → real lock
-transaction.atomic() → real ACID
-race condition → real
-performance → real
-Not SQLite emulation ❌
+* **Because from now on we can:**
+* **select_for_update() → real lock**
+* **transaction.atomic() → real ACID**
+* **race condition → real**
+* **performance → real**
+* **Not SQLite emulation ❌**
 
