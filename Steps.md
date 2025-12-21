@@ -129,3 +129,21 @@ This setup is intentionally chosen to be **professional, reproducible, and publi
 
 * **Clear onboarding path**
   Anyone reading the README or this file can follow the exact same steps and reach the same working state without guessing.
+
+---
+
+## چرا این شروع «درسته»؟
+
+چون:
+
+* **محیطت ایزوله‌ست (pipenv)**
+  تمام وابستگی‌ها داخل یک virtual environment مشخص نصب می‌شن و پروژه به سیستم عامل وابسته نمی‌مونه.
+
+* **نسخه Django مشخصه**
+  نسخه فریم‌ورک معلوم و قابل بررسیه؛ هر کسی پروژه رو اجرا کنه، همون رفتار رو می‌بینه.
+
+* **پروژه قابل انتشار و بازتولیده**
+  این ساختار برای GitHub، تیم، مصاحبه شغلی و حتی محیط Production قابل اتکاست.
+
+* **مسیر اجرا شفافه**
+  بعداً هر کسی README یا این فایل رو بخونه، بدون حدس زدن دقیقاً همین مسیر رو می‌ره و به نتیجه می‌رسه.
