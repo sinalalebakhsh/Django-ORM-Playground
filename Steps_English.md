@@ -224,3 +224,21 @@ Any query you write = real MySQL SQL
 * Test without writing Views and APIs
 * 📌 Django Admin = ORM testing console
 
+15.
+```
+  python manage.py createsuperuser
+```
+result:
+>Username (leave blank to use 'sina'): 
+>Email address: 
+>Password: 
+>Password (again): 
+>This password is too short. It must contain at least 8 characters.
+>This password is too common.
+>This password is entirely numeric.
+>Bypass password validation and create user anyway? [y/N]: y
+>Superuser created successfully.
+
+
+
+

@@ -224,4 +224,18 @@ Django ORM → MySQL
 * بدون نوشتن View و API تست کنیم
 * 📌 Django Admin = کنسول تست ORM
 
+15.
+```
+  python manage.py createsuperuser
+```
+نتیجه:
+>Username (leave blank to use 'sina'): 
+>Email address: 
+>Password: 
+>Password (again): 
+>This password is too short. It must contain at least 8 characters.
+>This password is too common.
+>This password is entirely numeric.
+>Bypass password validation and create user anyway? [y/N]: y
+>Superuser created successfully.
 
