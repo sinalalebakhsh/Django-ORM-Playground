@@ -89,7 +89,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-First project implementation (health check) directory -> /Django-ORM-Playground/orm_playground
+9. First project implementation (health check) directory -> /Django-ORM-Playground/orm_playground
 
 ```
 python manage.py runserver
@@ -147,4 +147,11 @@ This setup is intentionally chosen to be **professional, reproducible, and publi
 
 * **مسیر اجرا شفافه**
   بعداً هر کسی README یا این فایل رو بخونه، بدون حدس زدن دقیقاً همین مسیر رو می‌ره و به نتیجه می‌رسه.
+
+
+10.Install in Terminal 
+```
+  pipenv install mysqlclient
+```
+
 
