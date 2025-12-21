@@ -170,6 +170,8 @@ Result:
 >
 >mysql>
 
+13. Install mysql workbench
+[Click here...](https://dev.mysql.com/downloads/workbench/)
 
 
 
