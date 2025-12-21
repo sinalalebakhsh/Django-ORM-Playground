@@ -154,4 +154,12 @@ This setup is intentionally chosen to be **professional, reproducible, and publi
   pipenv install mysqlclient
 ```
 
+11. Install MySQL 9.5 Command Line Client
+[Click here...](https://dev.mysql.com/downloads/shell/)
+OR
+[Click here...](https://dev.mysql.com/doc/mysql-shell/9.5/en/)
+
+
+
+
 
