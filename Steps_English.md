@@ -238,7 +238,12 @@ result:
 >This password is entirely numeric.
 >Bypass password validation and create user anyway? [y/N]: y
 >Superuser created successfully.
-
+16.Check
+```
+  $ python manage.py check
+```
+result:
+>System check identified no issues (0 silenced).
 
 
 

@@ -238,4 +238,9 @@ Django ORM → MySQL
 >This password is entirely numeric.
 >Bypass password validation and create user anyway? [y/N]: y
 >Superuser created successfully.
-
+16. بررسی
+```
+$ python manage.py check
+```
+نتیجه:
+>بررسی سیستم هیچ مشکلی را شناسایی نکرد (۰ بی‌صدا شد).
