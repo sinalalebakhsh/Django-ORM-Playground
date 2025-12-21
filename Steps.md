@@ -147,3 +147,4 @@ This setup is intentionally chosen to be **professional, reproducible, and publi
 
 * **مسیر اجرا شفافه**
   بعداً هر کسی README یا این فایل رو بخونه، بدون حدس زدن دقیقاً همین مسیر رو می‌ره و به نتیجه می‌رسه.
+
