@@ -325,8 +325,22 @@ $ python manage.py check
 * بیش از یک category وجود دارد
 * برای تست Bulk Update و سناریوهای ORM ایده‌آل است
 
-#### Why this data?
-* Prices are different
-* Stock quantity is different
-* There is more than one category
-* Ideal for testing Bulk Update and ORM scenarios
+
+## تست خیلی سریع ORM (Shell)
+21. در دایرکتوری /Django-ORM-Playground/orm_playground
+```
+  python manage.py shell
+  from playground.models import Product
+  Product.objects.count()
+```
+result:
+>5
+
+22. in Django shell
+```
+  exit()
+```
+result:
+>now exiting InteractiveConsole...
+
+

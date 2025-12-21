@@ -326,3 +326,21 @@ In Admin → Categories → Add
 * Ideal for testing Bulk Update and ORM scenarios
 
 
+## Very fast ORM (Shell) testing
+21. in directory /Django-ORM-Playground/orm_playground
+```
+  python manage.py shell
+  from playground.models import Product
+  Product.objects.count()
+```
+result:
+>5
+
+22. in Django shell
+```
+  exit()
+```
+result:
+>now exiting InteractiveConsole...
+
+
