@@ -132,22 +132,6 @@ This setup is intentionally chosen to be **professional, reproducible, and publi
 
 ---
 
-## چرا این شروع «درسته»؟
-
-چون:
-
-* **محیطت ایزوله‌ست (pipenv)**
-  تمام وابستگی‌ها داخل یک virtual environment مشخص نصب می‌شن و پروژه به سیستم عامل وابسته نمی‌مونه.
-
-* **نسخه Django مشخصه**
-  نسخه فریم‌ورک معلوم و قابل بررسیه؛ هر کسی پروژه رو اجرا کنه، همون رفتار رو می‌بینه.
-
-* **پروژه قابل انتشار و بازتولیده**
-  این ساختار برای GitHub، تیم، مصاحبه شغلی و حتی محیط Production قابل اتکاست.
-
-* **مسیر اجرا شفافه**
-  بعداً هر کسی README یا این فایل رو بخونه، بدون حدس زدن دقیقاً همین مسیر رو می‌ره و به نتیجه می‌رسه.
-
 
 10.Install in Terminal 
 ```
@@ -203,10 +187,10 @@ Running migrations:
   Applying sessions.0001_initial... OK
 ```
 
-#### الان اتفاق مهمی می‌افته:
+#### Something important is happening now:
 Django ORM → MySQL
 
-#### جدول‌های:
+#### Tables:
 >auth_user
 >
 >django_migrations
@@ -215,18 +199,10 @@ Django ORM → MySQL
 >
 >admin
 
-دقیقاً با SQL واقعی MySQL ساخته می‌شن
+Built exactly with real MySQL SQL
 
-#### 📌 از این لحظه:
-هر کوئری که بنویسی = SQL واقعی MySQL
-
-#### چرا این مرحله برای ORM Playground حیاتی بود؟
-* **چون از الان به بعد می‌تونیم:**
-* **select_for_update() → lock واقعی**
-* **transaction.atomic() → ACID واقعی**
-* **race condition → واقعی**
-* **performance → واقعی**
-* **نه شبیه‌سازی SQLite ❌**
+#### 📌 From now on:
+Any query you write = real MySQL SQL
 
 #### Why was this step crucial for ORM Playground?
 * **Because from now on we can:**
@@ -235,4 +211,16 @@ Django ORM → MySQL
 * **race condition → real**
 * **performance → real**
 * **Not SQLite emulation ❌**
+
+#### Django Admin Why exactly now?
+* Before we:
+* Write an example
+* Run a complex query
+* Test a transaction
+
+#### We need to:
+* Create data quickly
+* See the ORM result
+* Test without writing Views and APIs
+* 📌 Django Admin = ORM testing console
 
