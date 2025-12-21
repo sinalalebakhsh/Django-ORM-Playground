@@ -17,17 +17,10 @@ Focuses only on ORM Every scenario is executable + explainable + testable Can be
 
 
 ## Steps:
-1.
-```
-pipenv install django
-```
-2.
-```
-pipenv shell
-```
-3. in vscode:
-Ctrl + P
-4. write:
->Python Select interpreter
+1.```pipenv install django```
+2.```pipenv shell```
+3. in vscode:Ctrl + P
+4. write:```Python Select interpreter```
+
 
 
