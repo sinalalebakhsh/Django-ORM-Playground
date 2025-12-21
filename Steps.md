@@ -178,16 +178,6 @@ Result:
   python manage.py migrate
 ```
 ### result:
-    الان اتفاق مهمی می‌افته:
-    Django ORM → MySQL
-    جدول‌های:
-    auth_user
-    django_migrations
-    sessions
-    admin
-    دقیقاً با SQL واقعی MySQL ساخته می‌شن
-    📌 از این لحظه:
-    هر کوئری که بنویسی = SQL واقعی MySQL
 ```
 $ python manage.py migrate
 Operations to perform:
@@ -213,5 +203,14 @@ Running migrations:
   Applying sessions.0001_initial... OK
 ```
 
-
+#### الان اتفاق مهمی می‌افته:
+Django ORM → MySQL
+جدول‌های:
+auth_user
+django_migrations
+sessions
+admin
+دقیقاً با SQL واقعی MySQL ساخته می‌شن
+📌 از این لحظه:
+هر کوئری که بنویسی = SQL واقعی MySQL
 
