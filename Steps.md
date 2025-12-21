@@ -61,5 +61,8 @@ orm_playground/
 ```
 In orm_playground/settings.py:
 ```
-
+INSTALLED_APPS = [
+    ...
+    'playground',
+]
 ```
