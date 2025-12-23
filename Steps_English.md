@@ -907,5 +907,20 @@ for q in connection.queries:
 ```
 
 # 🔥 Scenario 005 – Subquery و OuterRef
+This is where:
+* **ORM goes from "Simple Query" to Mental SQL**
+* **Many don't know**
 
+#### 🎯 Real Problem
+Scenario:
+
+* For each Category, you want to:
+* Get the most expensive Product in that Category
+* And display its name and price.
+
+
+26. in root project directory
+```
+pipenv install django-debug-toolbar
+```
 
