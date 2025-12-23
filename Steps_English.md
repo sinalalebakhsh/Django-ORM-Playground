@@ -514,3 +514,44 @@ Now imagine this:
 
 # 👉 Scenario 002 Transaction + select_for_update()
 
+#### 🧠 Before the code: What is the real problem?
+
+* Suppose we have this Product:
+
+| id | name | price | stock |
+| -------- | -------- | --- | ---- |
+| 1 | iPhone | 1000 | 5 |
+
+* Now two requests come in at the same time:
+>
+> Request A
+>
+* wants to decrease stock by 1
+>
+> Request B
+>
+* wants to decrease stock by 1 at the same time
+
+## ❌ What if we don't have a lock?
+
+##### Both requests read:
+```
+stock = 5
+```
+
+#### Both write:
+
+```
+stock = 4
+```
+
+#### ❗ Result?
+
+Two sales were made
+<br>
+But stock only decreased by 1
+<br>
+=> Corrupted data (real race condition)
+
+
+
