@@ -642,8 +642,78 @@ Product.objects.select_for_update().get(id=1)
 transaction + select_for_update واجبه
 
 
+# 👉 Scenario 003
+
+## N+1 Problem + select_related / prefetch_related
+<br>
+(جایی که ۹۰٪ پروژه‌ها کند می‌شن بدون اینکه بفهمن چرا)
+<br>
+
+
+# 🚨 Scenario 003 – N+1 Problem + select_related و prefetch_related
+
+
+#### 🧪 سناریوی ساده (ولی فاجعه‌بار)
+```
+  from playground.models import Product
+
+  products = Product.objects.all()
+
+  for product in products:
+      print(product.name, product.category.name)
+
+```
 
 
 
+# 💥 فاجعه N+1
+
+فرض کن:
+<br>
+1,000 تا Product داری
+<br>
+کوئری‌هایی که اجرا می‌شن:
+<br>
+1️⃣ یک query:
+
+```
+SELECT * FROM product;
+```
+
+2️⃣ برای هر Product:
+
+```
+SELECT * FROM category WHERE id = ...
+```
+
+یعنی:
+<br>
+1 + 1000 = 1001 Query 😱
+<br>
+و تو حتی متوجهش نمی‌شی.
+<Br>
+🧠 چرا این اتفاق می‌افته؟
+<br>
+چون:
+<br>
+category یک ForeignKey است
+<br>
+Django به‌صورت lazy لود می‌کنه
+<br>
+هر بار که می‌گی:
+
+```
+product.category
+```
+→ یک query جدید می‌زنه
 
 
+#### ✅ راه‌حل ۱: select_related (برای ForeignKey)
+
+~~~
+products = Product.objects.select_related("category").all()
+
+for product in products:
+    print(product.name, product.category.name)
+
+~~~

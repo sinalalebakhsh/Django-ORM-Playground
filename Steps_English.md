@@ -642,3 +642,78 @@ Or balance / money / share
 transaction + select_for_update is required
 
 
+# 👉 Scenario 003
+
+## N+1 Problem + select_related / prefetch_related
+<br>
+(Where 90% of projects slow down without knowing why)
+<br>
+
+
+# 🚨 Scenario 003 – N+1 Problem + select_related and prefetch_related
+
+
+#### 🧪 Simple (but disastrous) scenario
+```
+from playground.models import Product
+
+products = Product.objects.all()
+
+for product in products:
+print(product.name, product.category.name)
+
+```
+
+
+
+# 💥 N+1 Disaster
+
+Suppose:
+<br>
+You have 1,000 Products
+<br>
+Queries that are executed:
+<br>
+1️⃣ A query:
+
+```
+SELECT * FROM product;
+```
+
+2️⃣ For each Product:
+
+```
+SELECT * FROM category WHERE id = ...
+```
+
+That means:
+<br>
+1 + 1000 = 1001 Queries 😱
+<br>
+And you don't even realize it.
+<Br>
+🧠 Why does this happen?
+<br>
+Because:
+<br>
+category is a ForeignKey
+<br>
+Django lazy loads
+<br>
+Every time you say:
+
+```
+product.category
+```
+→ it runs a new query
+
+
+#### ✅ Solution 1: select_related (for ForeignKey)
+
+~~~
+products = Product.objects.select_related("category").all()
+
+for product in products:
+    print(product.name, product.category.name)
+
+~~~
