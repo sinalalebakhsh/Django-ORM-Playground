@@ -458,3 +458,13 @@ than
 | for + save | ❌ You have to solve manually | ❌ | ❌ |
 | update + F | ✅ Automatic | ✅ | ✅ |
 
+23.Django shell
+```
+    python manage.py shell
+```
+```
+  from playground.models.product import Product 
+  Product.objects.filter(category__name="Electronics").values("name", "price")
+  <QuerySet [{'name': 'iPhone', 'price': Decimal('1771.56')}, {'name': 'Laptop', 'price': Decimal('3543.12')}, {'name': 'Headphones', 'price': Decimal('354.31')}]>
+``` 
+
