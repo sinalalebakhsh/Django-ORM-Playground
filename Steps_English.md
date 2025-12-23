@@ -487,3 +487,18 @@ Result:
 * **Has no loops**
 * **Has no save()**
 * **Has no Decimal / float errors**
+
+#### 🧠 What exactly happened?
+
+Unlike the previous method:
+#### ❌ for-loop**
+* Django → pulls data into Python
+* Python → calculates
+* Sends back to database
+* Full of risks
+#### ✅ F()
+* Django just gives the command
+* MySQL reads the price itself
+* MySQL writes the price itself
+* Everything happens inside the database
+
