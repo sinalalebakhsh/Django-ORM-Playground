@@ -575,3 +575,31 @@ with transaction.atomic():
 ```
 
 
+#### 🧠 What exactly did this code do?
+1️⃣ transaction.atomic()
+<br>
+Meaning:
+<br>
+Either all changes are committed
+<br>
+Or if an error occurs → everything is rolled back
+<br>
+2️⃣ select_for_update()
+<br>
+Meaning:
+<br>
+MySQL LOCKS this row
+<br>
+Until this transaction is complete:
+<br>
+No other request can update this Product
+<br>
+It can't even call select_for_update()
+<br>
+3️⃣ Lock is only on that row
+<br>
+The entire table is not locked
+<br>
+Only the Product with id=1
+
+
