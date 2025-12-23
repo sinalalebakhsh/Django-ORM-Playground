@@ -40,14 +40,20 @@ def run_product_url(request):
             Has no Decimal / float errors
     Product.objects.filter(category__name="Electronics").update(price=F("price") * 1.1)
     Product.objects.filter(category__name="Electronics").values("name", "price")
-    """
     with transaction.atomic():
         product = Product.objects.select_for_update().get(id=1)
         
         product.stock = product.stock - 1
         product.save()
 
+    """
+    
+    # 💥 N+1 Disaster
 
+    products = Product.objects.select_related("category").all()
+
+    for product in products:
+        print(product.name, product.category.name)
 
 
     return render(request, 'sina.html')
