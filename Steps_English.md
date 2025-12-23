@@ -491,7 +491,7 @@ Result:
 #### 🧠 What exactly happened?
 
 Unlike the previous method:
-#### ❌ for-loop**
+#### ❌ for-loop
 * Django → pulls data into Python
 * Python → calculates
 * Sends back to database
@@ -502,3 +502,12 @@ Unlike the previous method:
 * MySQL writes the price itself
 * Everything happens inside the database
 
+## 🧪 Important test (deep understanding of the difference)
+Now imagine this:
+* 10,000 Products
+* for method → ​​10,001 queries
+* F method → ​​1 query
+* This is where ORM makes sense 🔥
+## 🧠 The rule of thumb you learned from this scenario
+* Whenever UPDATE depends on the previous value → F()
+* No exceptions.

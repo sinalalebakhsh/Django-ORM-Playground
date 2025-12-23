@@ -35,10 +35,7 @@ def run_product_url(request):
             Has no save()
             Has no Decimal / float errors
     """
-    Product.objects.filter(
-        category__name="Electronics"
-    ).update(
-        price=F("price") * 1.1
-    )
+    Product.objects.filter(category__name="Electronics").update(price=F("price") * 1.1)
+    Product.objects.filter(category__name="Electronics").values("name", "price")
 
     return render(request, 'sina.html')
