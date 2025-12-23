@@ -471,3 +471,19 @@ Result:
 ><QuerySet [{'name': 'iPhone', 'price': Decimal('1771.56')}, {'name': 'Laptop', 'price': Decimal('3543.12')}, {'name': 'Headphones', 'price': Decimal('354.31')}]>
 >
 
+#### This:
+```
+  from django.db.models import F
+  from playground.models import Product
+  Product.objects.filter(
+      category__name="Electronics"
+  ).update(
+      price=F("price") * 1.1
+  )
+
+```
+####This line:
+* **Runs immediately**
+* **Has no loops**
+* **Has no save()**
+* **Has no Decimal / float errors**
