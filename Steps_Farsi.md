@@ -767,3 +767,23 @@ products = Product.objects.prefetch_related("tags").all()
 | select_related   | SQL JOIN     | 1           |
 | prefetch_related | Python-level | 2           |
 
+# 🧠 قانون طلایی Scenario 003
+
+>قبل از نمایش لیست‌ها:
+>همیشه به N+1 فکر کن
+>
+
+🧪 تمرین پیشنهادی (خیلی مهم)
+<br>
+این رو بزن و تفاوت رو حس کن:
+<br>
+django shell:
+
+```
+from django.db import connection
+
+len(connection.queries)
+
+```
+
+

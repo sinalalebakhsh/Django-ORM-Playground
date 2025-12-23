@@ -767,3 +767,23 @@ Then Python connects them
 | select_related | SQL JOIN | 1 |
 | prefetch_related | Python-level | 2 |
 
+# 🧠 Golden Rule Scenario 003
+
+>Before displaying lists:
+>Always think N+1
+>
+
+🧪 Suggested exercise (very important)
+<br>
+Try this and feel the difference:
+<br>
+django shell:
+
+```
+from django.db import connection
+
+len(connection.queries)
+
+```
+
+
