@@ -807,3 +807,20 @@ def product_list(request):
 >
 > If you have 500 products → 501 queries
 >
+
+#### ✅ Correct and professional view
+```
+def product_list(request):
+    products = (
+        Product.objects
+        .select_related("category")
+        .filter(category__name="Electronics")
+        .order_by("price")
+    )
+
+    for product in products:
+        print(product.name, product.category.name, product.price)
+
+    return HttpResponse("OK")
+```
+
