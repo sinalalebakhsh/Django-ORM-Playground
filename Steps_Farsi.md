@@ -824,3 +824,84 @@ def product_list(request):
     return HttpResponse("OK")
 ```
 
+🧠 چرا ترتیب مهمه؟
+<br>
+این‌ها از نظر ORM معنای ذهنی دارن:
+
+```
+Product.objects
+.select_related("category")   # داده مرتبط رو از قبل بگیر
+.filter(...)                  # بعد فیلتر کن
+.order_by(...)                # بعد مرتب کن
+```
+🔍 SQL ذهنی که Django می‌سازه
+<br>
+
+```
+SELECT product.*, category.*
+FROM product
+JOIN category ON product.category_id = category.id
+WHERE category.name = 'Electronics'
+ORDER BY product.price ASC;
+```
+
+# 🧪 تمرین خیلی مهم
+in django shell
+
+```
+products = Product.objects.filter(category__name="Electronics").order_by("price")
+```
+```
+for product in products:
+    print(product.name, product.category.name)
+```
+## نتیجه:
+>
+>... 
+>Headphones Electronics
+>iPhone Electronics
+>Laptop Electronics
+>
+```
+from django.db import connection
+len(connection.queries)
+```
+## نتیجه:
+>
+> 8
+>
+#### Step 5: خروج
+```
+exit()
+```
+<br>
+## کوئری بهینه:
+
+```
+products = (Product.objects.select_related("category").filter(category__name="Electronics").order_by("price"))
+```
+سپس:
+```
+for product in products:
+    print(product.name, product.category.name)
+```
+## نتیجه:
+>
+>... 
+>Headphones Electronics
+>iPhone Electronics
+>Laptop Electronics
+>
+سپس
+```
+len(connection.queries)
+```
+>
+> 3
+>
+
+🧠 اگر می‌خواهید «خود SQL» را ببینید
+```
+for q in connection.queries:
+    print(q["sql"])
+```
