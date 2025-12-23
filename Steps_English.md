@@ -465,6 +465,9 @@ than
 ```
   from playground.models.product import Product 
   Product.objects.filter(category__name="Electronics").values("name", "price")
-  <QuerySet [{'name': 'iPhone', 'price': Decimal('1771.56')}, {'name': 'Laptop', 'price': Decimal('3543.12')}, {'name': 'Headphones', 'price': Decimal('354.31')}]>
 ``` 
+Result:
+>
+><QuerySet [{'name': 'iPhone', 'price': Decimal('1771.56')}, {'name': 'Laptop', 'price': Decimal('3543.12')}, {'name': 'Headphones', 'price': Decimal('354.31')}]>
+>
 
