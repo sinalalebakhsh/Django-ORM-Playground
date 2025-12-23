@@ -603,3 +603,42 @@ The entire table is not locked
 Only the Product with id=1
 
 
+#### ❌ Wrong method (very common)
+```
+  product = Product.objects.get(id=1)
+  product.stock -= 1
+  product.save()
+
+```
+
+#### 🧠 Difference between Scenario 001 and 002
+| Scenario | Tool | Application |
+| ------ | --------------------------------- | ----------- |
+| 001 | `F()` | bulk update |
+| 002 | `transaction + select_for_update` | sensitive update |
+
+
+### ⚠️ Very important MySQL tips
+🔹 Only works on InnoDB
+<br>
+(Luckily, that's the default MySQL)
+<br>
+🔹 Outside transaction is meaningless
+<Br>
+❌ This is wrong:
+
+```
+Product.objects.select_for_update().get(id=1)
+```
+Without atomic() → no locking happens
+#### 🧠 Golden Rule Scenario 002
+<br>
+Whenever:
+<br>
+You have multiple update steps
+<br>
+Or balance / money / share
+<br>
+transaction + select_for_update is required
+
+
