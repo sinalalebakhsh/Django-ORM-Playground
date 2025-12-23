@@ -717,3 +717,53 @@ for product in products:
     print(product.name, product.category.name)
 
 ~~~
+
+🔥 این بار چه شد؟
+<br>
+Django این کار رو می‌کنه:
+<br>
+
+```
+SELECT product.*, category.*
+FROM product
+JOIN category ON ...
+```
+#### 🧠 قانون select_related
+
+* **فقط برای:**
+* ForeignKey
+* OneToOneField
+* ❌ برای ManyToMany مناسب نیست
+
+### ✅ راه‌حل ۲: prefetch_related (برای Many)
+حالا فرض کن:
+<br>
+هر Product چندتا Tag داره
+<br>
+
+```
+for product in products:
+    for tag in product.tags.all():
+        print(tag.name)
+```
+اینم N+1 وحشتناک 😬
+<br>
+راه درست:
+
+```
+products = Product.objects.prefetch_related("tags").all()
+```
+
+#### Django:
+1 query برای Product
+<br>
+1 query برای Tag
+<br>
+بعد تو Python وصلشون می‌کنه
+
+#### 🧠 تفاوت خیلی مهم
+| ابزار            | JOIN         | تعداد Query |
+| ---------------- | ------------ | ----------- |
+| select_related   | SQL JOIN     | 1           |
+| prefetch_related | Python-level | 2           |
+
