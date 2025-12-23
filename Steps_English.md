@@ -346,7 +346,7 @@ result:
 >now exiting InteractiveConsole...
 
 
-## Scenario 001 – Bulk UPDATE with Django ORM (MySQL)
+# Scenario 001 – Bulk UPDATE with Django ORM (MySQL)
 
 ### Scenario Goal
 
@@ -511,3 +511,6 @@ Now imagine this:
 ## 🧠 The rule of thumb you learned from this scenario
 * Whenever UPDATE depends on the previous value → F()
 * No exceptions.
+
+# 👉 Scenario 002 Transaction + select_for_update()
+
