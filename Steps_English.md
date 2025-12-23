@@ -554,4 +554,24 @@ But stock only decreased by 1
 => Corrupted data (real race condition)
 
 
+24. 
+## Step 1: Imports
+```
+  from django.db import transaction
+  from playground.models import Product
+```
+
+25. concurence action
+<br>
+The first line, getting the product, and the update, which is the third line, and the fourth line, which is the save, are done simultaneously, but if one of them fails, neither of them will be done.
+
+```
+with transaction.atomic():
+    product = Product.objects.select_for_update().get(id=1)
+    
+    product.stock = product.stock - 1
+    product.save()
+
+```
+
 

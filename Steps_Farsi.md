@@ -554,3 +554,24 @@ stock = 4
 <br>
 => داده خراب (race condition واقعی)
 
+24. 
+## قدم ۱: ایمپورت‌ها
+```
+  from django.db import transaction
+  from playground.models import Product
+```
+
+25. همزمان این کارها رو انجام میده یعنی 
+<br>
+ خط اول گرفتن محصول و آپدیت که خط سوم هست و خط چهارم که ذخیره هست ، همزمان باهم انجام میشه ولی اگه یک مورد به خطا بخوره هیچکدوم رو انجام نمیده.
+ 
+
+```
+with transaction.atomic():
+    product = Product.objects.select_for_update().get(id=1)
+    
+    product.stock = product.stock - 1
+    product.save()
+
+```
+
