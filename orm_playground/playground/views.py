@@ -48,7 +48,8 @@ def run_product_url(request):
 
     """
     
-    # 💥 N+1 Disaster
+    # Prevent
+    #  💥 N+1 Disaster
 
     products = Product.objects.select_related("category").all()
 
