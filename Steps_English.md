@@ -905,3 +905,7 @@ len(connection.queries)
 for q in connection.queries:
     print(q["sql"])
 ```
+
+# 🔥 Scenario 005 – Subquery و OuterRef
+
+

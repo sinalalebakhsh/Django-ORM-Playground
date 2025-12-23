@@ -905,3 +905,10 @@ len(connection.queries)
 for q in connection.queries:
     print(q["sql"])
 ```
+
+# 🔥 Scenario 005 – Subquery و OuterRef
+اینجا جاییه که:
+<br>
+ORM از «Query ساده» تبدیل می‌شه به SQL ذهنی
+<br>
+خیلی‌ها بلد نیستن
