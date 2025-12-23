@@ -787,3 +787,23 @@ len(connection.queries)
 ```
 
 
+#### ❌ View ساده ولی اشتباه (N+1)
+```
+def product_list(request):
+    products = Product.objects.filter(
+        category__name="Electronics"
+    ).order_by("price")
+
+    for product in products:
+        print(product.category.name)
+
+    return HttpResponse("OK")
+```
+<br>
+
+* **مشکل؟**
+> 
+> برای هر product → یک query به category
+> 
+> اگر 500 product داشته باشی → 501 query
+> 

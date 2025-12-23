@@ -46,8 +46,6 @@ def run_product_url(request):
         product.stock = product.stock - 1
         product.save()
 
-    """
-    
     # Prevent
     #  💥 N+1 Disaster
 
@@ -55,6 +53,9 @@ def run_product_url(request):
 
     for product in products:
         print(product.name, product.category.name)
+    """
 
 
+    # ❌ View ساده ولی اشتباه (N+1)
+    
     return render(request, 'sina.html')

@@ -787,3 +787,23 @@ len(connection.queries)
 ```
 
 
+#### ❌ Simple but wrong view (N+1)
+```
+def product_list(request):
+    products = Product.objects.filter(
+        category__name="Electronics"
+    ).order_by("price")
+
+    for product in products:
+        print(product.category.name)
+
+    return HttpResponse("OK")
+```
+<br>
+
+* **Problem?**
+>
+> For each product → one query to category
+>
+> If you have 500 products → 501 queries
+>
