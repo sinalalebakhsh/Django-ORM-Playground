@@ -8,7 +8,7 @@ from decimal import Decimal, ROUND_HALF_UP
 
 # import this
 from playground.models.product import Product
-
+from playground.models.category import Category
 
 
 
@@ -57,5 +57,22 @@ def run_product_url(request):
 
 
     # ❌ View ساده ولی اشتباه (N+1)
-    
+    """
+    مشکل؟
+
+    اگر 100 Category داشته باشی → 101 Query
+
+    N+1 سنگین
+
+    افتضاح در scale
+    """
+    for category in Category.objects.all():
+        product = (
+            Product.objects
+            .filter(category=category)
+            .order_by("-price")
+            .first()
+        )
+        print(category.name, product.name)
+
     return render(request, 'sina.html')

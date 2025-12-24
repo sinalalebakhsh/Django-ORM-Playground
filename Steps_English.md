@@ -923,4 +923,7 @@ Scenario:
 ```
 pipenv install django-debug-toolbar
 ```
+27. See this
+[Click here...](https://django-debug-toolbar.readthedocs.io/en/latest/index.html)
+
 
