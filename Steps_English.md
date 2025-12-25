@@ -1171,3 +1171,33 @@ orm_playground/
 └── manage.py
 ```
 
+Why is this structure correct?
+<br>
+1️⃣ Why the models/? folder?
+<br>
+Because:
+<br>
+The project gets big
+<br>
+A big models.py = disaster
+<br>
+Each model has a specific responsibility
+<br>
+2️⃣ Why user.py inside the playground?
+<br>
+Because:
+<br>
+This User is related to your ORM scenario
+<br>
+Not a Django system User
+<br>
+Not auth
+<br>
+📌 Very important point:
+<br>
+If you use a real Django User → you don't create a User model at all
+<br>
+But here we have a training / domain User
+
+
+
