@@ -927,4 +927,78 @@ pipenv install django-debug-toolbar
 [Click here...](https://django-debug-toolbar.readthedocs.io/en/latest/index.html)
 
 
+#### مشکل؟
+
+اگر 100 Category داشته باشی → 101 Query
+<br>
+N+1 سنگین
+<br>
+افتضاح در scale 
+
+```
+    for category in Category.objects.all():
+        product = (
+            Product.objects
+            .filter(category=category)
+            .order_by("-price")
+            .first()
+        )
+        print(category.name, product.name)
+```
+
+# مسئله اصلی چیه؟
+
+تو وقتی ORM ساده می‌نویسی، هر Query روی یک جدول اجرا می‌شه
+<br>
+ولی بعضی وقت‌ها می‌خوای بگی:
+<br>
+
+* **«برای هر ردیف از جدول A**
+* **یه Query روی جدول B بزن**
+* **که به همون ردیف فعلی مربوطه»**
+* **اینجا ORM معمولی کم میاره → Subquery + OuterRef وارد می‌شن.**
+
+یک پرس و جو فرعی یک پرس و جو است که در داخل پرس و جو دیگری قرار گرفته است. در Django ORM، پرس و جوهای فرعی به شما کمک می کنند تا داده ها را از مدل های مرتبط در یک تماس پایگاه داده واکشی یا فیلتر کنید. این به ویژه زمانی مفید است که باید با داده های مرتبط کار کنید اما می خواهید چیزها را تمیز و کارآمد نگه دارید.
+
+#### اول ذهنیت SQL رو درست کنیم (خیلی مهم)
+
+##### فرض کن اینو می‌خوای:
+
+* برای هر Category
+* تعداد Product‌های داخلش رو حساب کن
+
+در SQL خام (مفهومی):
+```
+SELECT
+  category.*,
+  (
+    SELECT COUNT(*)
+    FROM product
+    WHERE product.category_id = category.id
+  ) AS product_count
+FROM category;
+```
+
+❗ دقت کن:
+<br>
+category.id مال query بیرونیه
+<Br>
+ولی داره داخل SELECT COUNT(*) ... استفاده می‌شه
+<Br>
+👉 این یعنی:
+<Br>
+مقدار ردیف بیرونی داره داخل subquery مصرف می‌شه
+
+## حالا ترجمه این مفهوم به Django ORM
+* **🎯 مشکل ORM**
+
+تو Django نمی‌تونی مستقیم بنویسی:
+```
+Product.objects.filter(category_id=Category.id)
+```
+چون:
+
+* **Category.id هنوز وجود نداره**
+* **ORM هنوز روی «یک ردیف خاص» نرفته**
+
 

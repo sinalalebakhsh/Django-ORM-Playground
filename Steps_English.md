@@ -925,5 +925,80 @@ pipenv install django-debug-toolbar
 ```
 27. See this
 [Click here...](https://django-debug-toolbar.readthedocs.io/en/latest/index.html)
+<br>
+
+#### Problem?
+
+If you have 100 categories → 101 queries
+<br>
+Heavy N+1
+<br>
+Awful in scale
+
+```
+    for category in Category.objects.all():
+        product = (
+            Product.objects
+            .filter(category=category)
+            .order_by("-price")
+            .first()
+        )
+        print(category.name, product.name)
+```
+
+# What is the main issue?
+
+When you write a simple ORM, each query is executed on a table
+<br>
+But sometimes you want to say:
+<br>
+
+* **"For each row of table A**
+* **Do a query on table B**
+* **which corresponds to the same current row"**
+* **here the normal ORM is reduced → Subquery + OuterRef are entered.**
+
+A subquery is a query nested inside another query. In Django ORM, subqueries help you fetch or filter data from related models in a single database call. This is especially useful when you need to work with related data but want to keep things clean and efficient.
+
+#### First, fix the SQL mentality (very important)
+
+##### Suppose you want this:
+
+* For each Category
+* Count the number of products inside
+
+In raw (conceptual) SQL:
+```
+SELECT
+  category.*,
+  (
+    SELECT COUNT(*)
+    FROM product
+    WHERE product.category_id = category.id
+  ) AS product_count
+FROM category;
+```
+
+Be careful:
+<br>
+category.id belongs to the external query
+<br>
+But it is being used in SELECT COUNT(*)...
+<br>
+This means:
+<br>
+The value of the outer row is used in the subquery
+
+## Now translate this concept to Django ORM
+* **🎯 ORM problem**
+
+In Django you cannot write directly:
+```
+Product.objects.filter(category_id=Category.id)
+```
+because:
+
+* **Category.id does not exist yet**
+* **ORM not yet on "a specific row"**
 
 
