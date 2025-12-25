@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import F
 from django.db import transaction
+from django.db.models import OuterRef, Subquery, Count
 
 # Create your views here.
 from decimal import Decimal, ROUND_HALF_UP
@@ -65,7 +66,6 @@ def run_product_url(request):
     N+1 سنگین
 
     افتضاح در scale
-    """
     for category in Category.objects.all():
         product = (
             Product.objects
@@ -74,5 +74,19 @@ def run_product_url(request):
             .first()
         )
         print(category.name, product.name)
+    """
 
-    return render(request, 'sina.html')
+    products_count_subquery = (
+        Product.objects
+        .filter(category_id=OuterRef('id'))  # 👈 این خط کل داستانه
+        .values('category_id')
+        .annotate(cnt=Count('id'))
+        .values('cnt')
+    )
+
+    categories = Category.objects.annotate(
+        product_count=Subquery(products_count_subquery)
+    )
+    list(categories)
+
+    return render(request, 'sina.html',{'categories':categories})

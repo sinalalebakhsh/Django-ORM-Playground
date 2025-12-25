@@ -1002,3 +1002,35 @@ because:
 * **ORM not yet on "a specific row"**
 
 
+This is where OuterRef comes in handy
+<br>
+Very simple definition:
+<br>
+
+> OuterRef('id') means:
+> "When the ORM went to a specific category
+> put the id value of the same row here"
+
+```
+from django.db.models import OuterRef, Subquery, Count
+
+products_count_subquery = (
+    Product.objects
+    .filter(category_id=OuterRef('id'))  # 👈 این خط کل داستانه
+    .values('category_id')
+    .annotate(cnt=Count('id'))
+    .values('cnt')
+)
+
+categories = Category.objects.annotate(
+    product_count=Subquery(products_count_subquery)
+)
+```
+
+* **.filter(category_id=OuterRef('id'))**
+That is:
+
+> "When the ORM is hovering over a specific category
+> Category.id value of the same row
+> replace OuterRef('id')"
+

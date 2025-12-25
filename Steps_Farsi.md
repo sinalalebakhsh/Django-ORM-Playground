@@ -1002,3 +1002,35 @@ Product.objects.filter(category_id=Category.id)
 * **ORM هنوز روی «یک ردیف خاص» نرفته**
 
 
+اینجاست که OuterRef معنی پیدا می‌کنه
+<br>
+تعریف خیلی ساده:
+<br>
+
+> OuterRef('id') یعنی:
+> «وقتی ORM رفت روی یک Category خاص
+> مقدار id همون ردیف رو اینجا بذار»
+
+```
+from django.db.models import OuterRef, Subquery, Count
+
+products_count_subquery = (
+    Product.objects
+    .filter(category_id=OuterRef('id'))  # 👈 این خط کل داستانه
+    .values('category_id')
+    .annotate(cnt=Count('id'))
+    .values('cnt')
+)
+
+categories = Category.objects.annotate(
+    product_count=Subquery(products_count_subquery)
+)
+```
+
+* **.filter(category_id=OuterRef('id'))**
+یعنی:
+
+> «وقتی ORM داره روی یک Category خاص می‌چرخه
+> مقدار Category.id همون ردیف رو
+> بذار جای OuterRef('id')»
+
