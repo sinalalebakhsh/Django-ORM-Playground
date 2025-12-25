@@ -3,6 +3,8 @@ from django.contrib import admin
 from playground.models.category import Category
 from playground.models.product import Product
 
+from .models import User, Order
+
 
 
 # Register your models here.
@@ -18,3 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 
+
+admin.site.register(User)
+
+admin.site.register(Order)

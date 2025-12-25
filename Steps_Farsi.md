@@ -1265,6 +1265,14 @@ python manage.py migrate
 ```
 
 
+### Result:
+```
+Migrations for 'playground':
+  playground\migrations\0002_user_order.py
+    + Create model User
+    + Create model Order
+```
+
 
 اگر این فایل نباشد یا اشتباه باشد چه می‌شود؟
 <br>

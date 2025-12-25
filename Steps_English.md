@@ -1260,11 +1260,28 @@ What next?
 <br>
 Must: in Terminal
 
-````
+```
 python manage.py makemigrations
-python manage.py migrate
+```
+### Result:
+```
+Migrations for 'playground':
+  playground\migrations\0002_user_order.py
+    + Create model User
+    + Create model Order
 ```
 
+```
+python manage.py migrate
+```
+### Result:
+```
+python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, playground, sessions
+Running migrations:
+  Applying playground.0002_user_order... OK
+```
 
 What happens if this file is missing or incorrect?
 <br>
