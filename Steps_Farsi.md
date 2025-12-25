@@ -1201,3 +1201,82 @@ orm_playground/
 
 
 
+پیاده‌سازی صحیح قدم‌به‌قدم
+<br>
+📁 playground/models/user.py
+<br>
+
+```
+from django.db import models
+
+class User(models.Model):
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.email
+```
+📁 playground/models/order.py
+```
+from django.db import models
+from .user import User
+
+class Order(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='orders'
+    )
+    is_paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Order #{self.id} - Paid: {self.is_paid}"
+```
+📁 playground/models/init.py (خیلی مهم)
+```
+from .user import User
+from .order import Order
+from .product import Product
+from .category import Category
+```
+📌 اگر اینو ننویسی:
+
+* **Django مدل‌ها رو نمی‌شناسه**
+* **migrate به مشکل می‌خوره**
+
+ثبت در admin (درسته)
+<br>
+📁 playground/admin.py
+
+```
+from django.contrib import admin
+from .models import User, Order
+
+admin.site.register(User)
+admin.site.register(Order)
+```
+
+بعدش چی؟
+<br>
+حتماً: in Terminal
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+
+
+اگر این فایل نباشد یا اشتباه باشد چه می‌شود؟
+<br>
+❌ این اتفاق‌ها می‌افتد:
+<br>
+makemigrations مدل‌ها را کامل نمی‌بیند
+<br>
+admin.py ارور import می‌دهد
+<br>
+Queryها fail می‌شوند
+<br>
+پروژه در آینده شکننده می‌شود
+<br>
+
+

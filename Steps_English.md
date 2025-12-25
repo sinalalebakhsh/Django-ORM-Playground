@@ -1201,3 +1201,82 @@ But here we have a training / domain User
 
 
 
+Correct implementation step by step
+<br>
+📁 playground/models/user.py
+<br>
+
+```
+from django.db import models
+
+class User(models.Model): 
+  email = models.EmailField() 
+
+  def __str__(self): 
+    return self.email
+```
+📁 playground/models/order.py
+```
+from django.db import models
+from .user import User
+
+class Order(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='orders'
+    )
+    is_paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Order #{self.id} - Paid: {self.is_paid}"
+```
+📁 playground/models/init.py (very important)
+```
+from .user import User
+from .order import Order
+from .product import Product
+from .category import Category
+```
+📌 If you don't write this:
+
+* **Django doesn't recognize models**
+* **migrate will fail**
+
+Register in admin (correct)
+<br>
+📁 playground/admin.py
+
+```
+from django.contrib import admin
+from .models import User, Order
+
+admin.site.register(User)
+
+admin.site.register(Order)
+```
+
+What next?
+<br>
+Must: in Terminal
+
+````
+python manage.py makemigrations
+python manage.py migrate
+```
+
+
+What happens if this file is missing or incorrect?
+<br>
+❌ This happens:
+<br>
+makemigrations does not see complete models
+<br>
+admin.py gives import error
+<br>
+Queries fail
+<br>
+Project becomes fragile in the future
+<br>
+
+
