@@ -1072,3 +1072,37 @@ because:
 
 > "Later, when you go to each row, give the value"
 
+# The problem that Exists solves
+
+Sometimes you don't care how many records there are
+
+<br>
+You just want to know:
+<br>
+"Is there at least one related record?"
+<br>
+For example:
+
+* **Does this Category have at least one Product?**
+
+* **Does this User have at least one Order?**
+
+* **Does this Product have at least one Review?**
+
+Here:
+
+* **Count is too high**
+* **Exists is exactly what you want**
+
+#### Mental SQL (very important)
+```
+SELECT *,
+  EXISTS (
+    SELECT 1
+    FROM product
+    WHERE product.category_id = category.id
+  ) AS has_products
+FROM category;
+
+```
+

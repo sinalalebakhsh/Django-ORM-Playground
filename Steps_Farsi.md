@@ -1072,3 +1072,35 @@ Product.objects.filter(category_id=OuterRef('id'))
 
 > «بعداً، وقتی رفتی روی هر ردیف، مقدارش رو بده»
 
+# مسئله‌ای که Exists حل می‌کنه
+
+بعضی وقت‌ها برات مهم نیست چندتا رکورد وجود داره
+<br>
+فقط می‌خوای بدونی:
+<br>
+«آیا حداقل یک رکورد مرتبط وجود دارد یا نه؟»
+<br>
+مثلاً:
+
+* **آیا این Category حداقل یک Product دارد؟**
+* **آیا این User حداقل یک Order دارد؟**
+* **آیا این Product حداقل یک Review دارد؟**
+
+اینجا:
+
+* **Count زیاده**
+* **Exists دقیقاً همون چیزیه که می‌خوای**
+
+#### SQL ذهنی (خیلی مهم)
+```
+SELECT *,
+  EXISTS (
+    SELECT 1
+    FROM product
+    WHERE product.category_id = category.id
+  ) AS has_products
+FROM category;
+
+```
+
+
