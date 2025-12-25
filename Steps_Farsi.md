@@ -1100,7 +1100,74 @@ SELECT *,
     WHERE product.category_id = category.id
   ) AS has_products
 FROM category;
-
 ```
 
+
+نکته کلیدی:
+<br>
+category.id مال query بیرونی
+<br>
+داخل subquery استفاده شده
+<br>
+فقط TRUE / FALSE برمی‌گرده
+<br>
+ترجمه دقیق به Django ORM
+
+```
+from django.db.models import Exists, OuterRef
+
+categories = Category.objects.annotate(
+    has_products=Exists(
+        Product.objects.filter(category_id=OuterRef('id'))
+    )
+)
+```
+
+تفاوت مهم Exists با Subquery + Count
+<br>
+
+| حالت           | پیشنهاد  |
+| -------------- | -------- |
+| فقط بله / خیر  | Exists   |
+| تعداد مهمه     | Count    |
+| مقدار خاص مهمه | Subquery |
+
+# سناریوی بازارکاری واقعی (Order / User)
+سناریو واقعی
+<br>
+فرض کن فروشگاه داری و می‌خوای:
+<br>
+کاربرانی را لیست کنی که حداقل یک سفارش پرداخت‌شده دارند
+<br>
+
+models:
+```
+class User(models.Model):
+    email = models.EmailField()
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_paid = models.BooleanField(default=False)
+```
+
+## ساختار پیشنهادی حرفه‌ای (همونی که بازار می‌پسنده)
+```
+orm_playground/
+├── orm_playground/
+│   └── settings.py
+│
+├── playground/
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── order.py
+│   │   ├── product.py
+│   │   └── category.py
+│   │
+│   ├── admin.py
+│   ├── apps.py
+│   └── views.py
+│
+└── manage.py
+```
 

@@ -1084,9 +1084,7 @@ You just want to know:
 For example:
 
 * **Does this Category have at least one Product?**
-
 * **Does this User have at least one Order?**
-
 * **Does this Product have at least one Review?**
 
 Here:
@@ -1103,6 +1101,73 @@ SELECT *,
     WHERE product.category_id = category.id
   ) AS has_products
 FROM category;
+```
 
+Key point:
+<br>
+category.id is from outer query
+<br>
+used inside subquery
+<br>
+returns only TRUE / FALSE
+<br>
+accurate translation to Django ORM
+
+```
+from django.db.models import Exists, OuterRef
+
+categories = Category.objects.annotate(
+    has_products=Exists(
+        Product.objects.filter(category_id=OuterRef('id'))
+    )
+)
+```
+
+Important difference between Exists and Subquery + Count
+<br>
+
+| حالت           | پیشنهاد  |
+| -------------- | -------- |
+| فقط بله / خیر  | Exists   |
+| تعداد مهمه     | Count    |
+| مقدار خاص مهمه | Subquery |
+
+# Real Marketing Scenario (Order / User)
+Real Scenario
+<br>
+Suppose you have a store and you want to:
+<br>
+List users who have at least one paid order
+<br>
+
+models:
+```
+class User(models.Model):
+    email = models.EmailField()
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_paid = models.BooleanField(default=False)
+```
+
+## Professional proposal structure (the one the market likes)
+```
+orm_playground/
+├── orm_playground/
+│   └── settings.py
+│
+├── playground/
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── order.py
+│   │   ├── product.py
+│   │   └── category.py
+│   │
+│   ├── admin.py
+│   ├── apps.py
+│   └── views.py
+│
+└── manage.py
 ```
 
