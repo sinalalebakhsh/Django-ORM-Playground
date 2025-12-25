@@ -15,8 +15,11 @@ SINA
 
 {% for item in categories %}
     <h1>{{item.name}}</h1>
-    <h2>{{item.}}</h2>
+    <h2>item.top_product_name: {{item.top_product_name}}</h2>
+    <h2>item.top_product_price: {{item.top_product_price}}</h2>
 {% endfor %}
+
+{{most_expensive_product}}
 
 </body>
 </html>

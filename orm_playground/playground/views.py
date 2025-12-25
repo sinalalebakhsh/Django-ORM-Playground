@@ -3,6 +3,10 @@ from django.db.models import F
 from django.db import transaction
 from django.db.models import OuterRef, Subquery, Count
 
+
+from django.db.models import OuterRef, Subquery
+
+
 # Create your views here.
 from decimal import Decimal, ROUND_HALF_UP
 
@@ -74,8 +78,6 @@ def run_product_url(request):
             .first()
         )
         print(category.name, product.name)
-    """
-
     products_count_subquery = (
         Product.objects
         .filter(category_id=OuterRef('id'))  # 👈 این خط کل داستانه
@@ -88,5 +90,27 @@ def run_product_url(request):
         product_count=Subquery(products_count_subquery)
     )
     list(categories)
+    """
 
-    return render(request, 'sina.html',{'categories':categories})
+
+
+
+    most_expensive_product = (
+        Product.objects
+        .filter(category=OuterRef("pk"))
+        .order_by("-price")
+    )
+
+    categories = Category.objects.annotate(
+        top_product_name=Subquery(
+            most_expensive_product.values("name")[:1]
+        ),
+        top_product_price=Subquery(
+            most_expensive_product.values("price")[:1]
+        )
+    )
+
+    return render(request, 'sina.html',{
+        'categories':categories,
+        'expensive_product':most_expensive_product,
+        })
