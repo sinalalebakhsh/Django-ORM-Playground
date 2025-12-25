@@ -1034,3 +1034,41 @@ That is:
 > Category.id value of the same row
 > replace OuterRef('id')"
 
+# Golden sentence (remember this)
+
+> OuterRef is the bridge between outer query and subquery
+
+#### or even simpler:
+
+> OuterRef says:
+> The value of this field
+> Take from the row where we are now"
+
+## What is the difference with the normal filter?
+```
+Product.objects.filter(category_id=Category.id)
+```
+Why is it wrong?
+<br>
+❌ Wrong:
+
+* **Category.id still has no meaning**
+* **ORM not yet on specific row**
+
+Correct:
+```
+Product.objects.filter(category_id=OuterRef('id'))
+```
+because:
+
+* **ORM says: "When the time comes, I will put the amount"**
+
+# A very simple analogy
+## normal filter:
+
+> "Pay the amount now"
+
+## OuterRef:
+
+> "Later, when you go to each row, give the value"
+

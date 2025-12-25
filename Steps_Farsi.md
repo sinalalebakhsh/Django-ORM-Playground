@@ -1034,3 +1034,41 @@ categories = Category.objects.annotate(
 > مقدار Category.id همون ردیف رو
 > بذار جای OuterRef('id')»
 
+# جمله طلایی (این رو حفظ کن)
+
+> OuterRef یعنی پل ارتباطی بین Query بیرونی و Subquery
+
+#### یا حتی ساده‌تر:
+
+> «OuterRef می‌گه:
+> مقدار این فیلد رو
+> از ردیفی که الان روش هستیم بگیر»
+
+## فرقش با filter معمولی چیه؟
+```
+Product.objects.filter(category_id=Category.id)
+```
+چرا غلطه؟
+<br>
+❌ غلط:
+
+* **Category.id هنوز معنی نداره**
+* **ORM هنوز روی ردیف خاصی نیست**
+
+✅ درست:
+```
+Product.objects.filter(category_id=OuterRef('id'))
+```
+چون:
+
+* **ORM می‌گه: «وقتش که رسید، مقدار رو می‌ذارم»**
+
+# یک تشبیه خیلی ساده
+## filter معمولی:
+
+> «الان مقدار رو بده»
+
+## OuterRef:
+
+> «بعداً، وقتی رفتی روی هر ردیف، مقدارش رو بده»
+
