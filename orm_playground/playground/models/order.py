@@ -13,6 +13,7 @@ class Order(models.Model):
         related_name='orders'
     )
     is_paid = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Order #{self.id} - Paid: {self.is_paid}"
