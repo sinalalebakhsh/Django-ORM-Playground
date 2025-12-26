@@ -1261,10 +1261,7 @@ admin.site.register(Order)
 
 ```
 python manage.py makemigrations
-python manage.py migrate
 ```
-
-
 ### Result:
 ```
 Migrations for 'playground':
@@ -1273,6 +1270,17 @@ Migrations for 'playground':
     + Create model Order
 ```
 
+
+```
+python manage.py migrate
+```
+### Result:
+```
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, playground, sessions
+Running migrations:
+  Applying playground.0002_user_order... OK
+```
 
 اگر این فایل نباشد یا اشتباه باشد چه می‌شود؟
 <br>
@@ -1287,4 +1295,16 @@ Queryها fail می‌شوند
 پروژه در آینده شکننده می‌شود
 <br>
 
+
+# 🔴 Import Cycle یعنی چی؟ (تعریف خیلی ساده)
+
+Import Cycle (Circular Import) یعنی:
+
+* **دو (یا چند) فایل**
+* **به‌صورت زنجیره‌ای**
+* **همدیگه رو import کنن**
+* **طوری که پایتون گیر بیفته**
+
+یعنی پایتون نمی‌دونه اول کدوم رو کامل لود کنه.
+<br>
 

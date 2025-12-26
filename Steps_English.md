@@ -1276,7 +1276,6 @@ python manage.py migrate
 ```
 ### Result:
 ```
-python manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, playground, sessions
 Running migrations:
@@ -1296,4 +1295,16 @@ Queries fail
 Project becomes fragile in the future
 <br>
 
+
+# 🔴 What is an Import Cycle? (Very simple definition)
+
+Import Cycle (Circular Import) means:
+
+* **Two (or more) files**
+* **In a chain**
+* **Import each other**
+* **So that Python gets stuck**
+
+That is, Python does not know which one to load first.
+<br>
 
