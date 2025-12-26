@@ -35,14 +35,13 @@ def run_product_url(request):
 
     Product.objects.update(price=F("price") * 1.1)    
     products = Product.objects.filter(category__name="Electronics")
-    """
-    
-    """
-        This line:
-            Runs immediately
-            Has no loops
-            Has no save()
-            Has no Decimal / float errors
+
+    # 
+    This line:
+        Runs immediately
+        Has no loops
+        Has no save()
+        Has no Decimal / float errors
     Product.objects.filter(category__name="Electronics").update(price=F("price") * 1.1)
     Product.objects.filter(category__name="Electronics").values("name", "price")
     with transaction.atomic():
@@ -58,11 +57,8 @@ def run_product_url(request):
 
     for product in products:
         print(product.name, product.category.name)
-    """
-
 
     # ❌ View ساده ولی اشتباه (N+1)
-    """
     مشکل؟
 
     اگر 100 Category داشته باشی → 101 Query
@@ -91,9 +87,6 @@ def run_product_url(request):
     )
     list(categories)
     """
-
-
-
 
     most_expensive_product = (
         Product.objects
