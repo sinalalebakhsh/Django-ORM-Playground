@@ -1512,3 +1512,42 @@ The Golden Rule:
 * ***Order → OrderItem ⟵ reverse FK → prefetch***
 * ***OrderItem → Product ⟵ FK → select***
 
+# Complete but professional solution (two steps)
+
+We first want to:
+<br>
+Get the Orders
+<br>
+OrderItems together
+<br>
+Pull up the Products at the same time
+<br>
+Step 4.1: Optimize the Query on OrderItem
+
+```
+from playground.models import OrderItem
+
+order_items_qs = OrderItem.objects.select_related('product')
+```
+
+### 🔍 This means:
+
+> “For every OrderItem you get
+> get its related Product with a JOIN”
+
+Step 4.2: Join it to Order
+
+```
+orders = Order.objects.prefetch_related(
+'items'
+)
+```
+But this still returns a raw OrderItem.
+<br>
+This is where Prefetch comes into play
+<br>
+What does Prefetch mean?
+
+> "I just don't want to prefetch
+> I want to control what gets prefetched"
+
