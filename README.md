@@ -55,11 +55,19 @@ Ctrl+P
 
 
 5. MySQL Workbench:
-Create 
+Create a new SQL tab for executing queries:
+<br>
+Select first line and click on thunder ⚡
+<br>
+than select second line and click on thunder too:
+
 ```
 DROP DATABASE orm_playground;
 CREATE DATABASE orm_playground;
 ```
+result:
+> orm_playground created
+
 
 4. run in Terminal/CMD
 ```
