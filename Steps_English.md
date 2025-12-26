@@ -1488,3 +1488,14 @@ from .order import Order
 * ***✔️ No error***
 * ***✔️ Expandable***
 
+# Very important marketing sentence
+
+* ***Circular import is not a syntax problem***
+* ***It is an architecture problem***`
+
+If you understand this:
+
+* ***Your projects will break later***
+* ***Less debugging***
+* ***More team trust***
+
