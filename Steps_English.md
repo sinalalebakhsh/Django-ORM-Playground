@@ -1460,3 +1460,31 @@ from .order import Order
 * ***Model → Model = string reference***
 * ***Service / Query → actual import***
 
+Final correct example (Production-grade)
+<br>
+order.py
+
+```
+class Order(models.Model):
+    user = models.ForeignKey(
+        'playground.User',
+        on_delete=models.CASCADE,
+        related_name='orders'
+    )
+```
+user.py
+
+```
+class User(models.Model):
+    email = models.EmailField()
+```
+
+__init__.py
+```
+from .user import User
+from .order import Order
+```
+* ***✔️ No cycle***
+* ***✔️ No error***
+* ***✔️ Expandable***
+
