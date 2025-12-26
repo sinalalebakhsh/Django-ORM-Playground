@@ -1308,3 +1308,35 @@ Import Cycle (Circular Import) یعنی:
 یعنی پایتون نمی‌دونه اول کدوم رو کامل لود کنه.
 <br>
 
+مثال خیلی ساده (غیر Django)
+<br>
+file_a.py
+
+```
+from file_b import B
+
+class A:
+    pass
+```
+file_b.py
+
+```
+from file_a import A
+
+class B:
+    pass
+```
+
+❌ نتیجه:
+
+```
+ImportError: cannot import name 'A'
+```
+
+چرا؟
+
+* **پایتون شروع می‌کنه file_a**
+* **می‌رسه به file_b**
+* **file_b می‌گه: اول file_a**
+* **پایتون: 😐**
+

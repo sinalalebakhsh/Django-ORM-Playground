@@ -1308,3 +1308,35 @@ Import Cycle (Circular Import) means:
 That is, Python does not know which one to load first.
 <br>
 
+Very simple example (non-Django)
+<br>
+file_a.py
+
+```
+from file_b import B
+
+class A:
+pass
+```
+file_b.py
+
+```
+from file_a import A
+
+class B:
+pass
+```
+
+❌ Result:
+
+```
+ImportError: cannot import name 'A'
+```
+
+Why?
+
+* **Python starts file_a**
+* **Gets to file_b**
+* **file_b says: file_a first**
+* **Python: 😐**
+
