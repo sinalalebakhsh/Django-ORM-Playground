@@ -18,7 +18,83 @@ CONFIG = {
     'log_file': 'git_auto_log.txt',  # Log file name
     'max_log_lines': 2000,       # Maximum lines in log file
     'log_rotation_size': 1000,   # Keep last 1000 lines when rotating
+    'version_file': '.git_auto_version',  # File to store current version
 }
+
+# Version management
+CURRENT_VERSION = "1.1.3"  # Starting version
+
+def load_version():
+    """Load current version from file or use default"""
+    global CURRENT_VERSION
+    version_file = CONFIG['version_file']
+    
+    if os.path.exists(version_file):
+        try:
+            with open(version_file, 'r') as f:
+                version = f.read().strip()
+                if version:
+                    CURRENT_VERSION = version
+                    print(f"📦 Loaded version: {CURRENT_VERSION}")
+                else:
+                    print(f"⚠ Version file empty, using default: {CURRENT_VERSION}")
+        except Exception as e:
+            print(f"⚠ Error loading version file: {str(e)}")
+            print(f"  Using default version: {CURRENT_VERSION}")
+    else:
+        print(f"📦 Version file not found, starting with: {CURRENT_VERSION}")
+    
+    return CURRENT_VERSION
+
+def save_version(version):
+    """Save version to file"""
+    try:
+        with open(CONFIG['version_file'], 'w') as f:
+            f.write(version)
+        print(f"💾 Version saved: {version}")
+        return True
+    except Exception as e:
+        print(f"✗ Error saving version: {str(e)}")
+        return False
+
+def increment_version(current_version):
+    """
+    Increment version according to semantic versioning rules:
+    1.1.3 -> 1.1.4 -> ... -> 1.1.99 -> 1.2.0 -> ... -> 1.99.0 -> 2.0.0
+    """
+    try:
+        # Split version into parts
+        parts = current_version.split('.')
+        if len(parts) != 3:
+            print(f"⚠ Invalid version format: {current_version}, using default increment")
+            return "1.1.4"
+        
+        major = int(parts[0])
+        minor = int(parts[1])
+        patch = int(parts[2])
+        
+        # Increment logic
+        if patch < 99:
+            # Increment patch: 1.1.3 -> 1.1.4
+            patch += 1
+        elif minor < 99:
+            # Increment minor, reset patch: 1.1.99 -> 1.2.0
+            minor += 1
+            patch = 0
+        else:
+            # Increment major, reset minor and patch: 1.99.99 -> 2.0.0
+            major += 1
+            minor = 0
+            patch = 0
+        
+        new_version = f"{major}.{minor}.{patch}"
+        print(f"🔄 Version incremented: {current_version} -> {new_version}")
+        return new_version
+        
+    except ValueError as e:
+        print(f"✗ Error parsing version {current_version}: {str(e)}")
+        # Fallback: simple increment
+        return "1.1.4"
 
 def check_internet_connection():
     """Check internet connection using multiple methods"""
@@ -199,7 +275,6 @@ def rotate_log_file_if_needed():
                 
                 print(f"✓ Log file rotated. Kept last {keep_lines} lines.")
                 
-                # Create rotation marker
                 rotation_marker = [
                     f"\n{'='*80}\n",
                     f"LOG FILE ROTATED\n",
@@ -371,13 +446,15 @@ def verify_git_push():
 
 def run_git_commands():
     """Execute git commands with verification and logging"""
+    global CURRENT_VERSION
+    
     try:
         current_time = datetime.datetime.now().strftime("%d.%m.%y %H:%M:%S")
         full_timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Start log
         log_content = []
-        log_content.append(f"GIT AUTO OPERATION STARTED")
+        log_content.append(f"GIT AUTO OPERATION STARTED - Version {CURRENT_VERSION}")
         log_content.append(f"Time: {full_timestamp}")
         log_content.append("")
         
@@ -411,8 +488,17 @@ def run_git_commands():
         log_content.append("2. GIT COMMIT")
         log_content.append("-" * 40)
         
-        # Create commit message
-        commit_msg = f"{current_time}\n{changes_message}"
+        # Increment version before commit
+        new_version = increment_version(CURRENT_VERSION)
+        
+        # Create commit message with version
+        commit_msg = f"Version {new_version} - {current_time}\n{changes_message}"
+        
+        # Update current version
+        CURRENT_VERSION = new_version
+        save_version(CURRENT_VERSION)
+        
+        print(f"🎯 Committing as version: {CURRENT_VERSION}")
         
         # git commit
         print("\n2. Running git commit ...")
@@ -437,16 +523,16 @@ def run_git_commands():
         ).stdout.strip()
         
         log_content.append(f"✓ git commit completed")
+        log_content.append(f"Version: {CURRENT_VERSION}")
         log_content.append(f"Commit Hash: {commit_hash} ({commit_full_hash})")
         log_content.append(f"Commit Message:\n{commit_msg}")
         log_content.append(f"Output: {commit_result.stdout.strip()}")
         log_content.append("")
-        print(f"   ✓ git commit completed (commit: {commit_hash})")
+        print(f"   ✓ git commit completed (commit: {commit_hash}, version: {CURRENT_VERSION})")
         
         log_content.append("3. GIT PUSH")
         log_content.append("-" * 40)
         
-        # git push
         print(f"\n3. Running git push to {CONFIG['branch']} branch...")
         push_result = subprocess.run(['git', 'push', '-u', 'origin', CONFIG['branch']], 
                                     capture_output=True, 
@@ -505,6 +591,7 @@ def run_git_commands():
         
         log_content.append("")
         log_content.append("OPERATION COMPLETED SUCCESSFULLY")
+        log_content.append(f"Version: {CURRENT_VERSION}")
         log_content.append(f"Time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         log_content.append(f"Commit: {commit_hash}")
         
@@ -513,6 +600,7 @@ def run_git_commands():
         
         # Print summary to console
         print(f"\n{current_time} - Operation completed successfully")
+        print(f"🎯 New Version: {CURRENT_VERSION}")
         print(f"Commit: {commit_hash}")
         print(f"Message preview: {commit_msg[:100]}...")
         print(f"Push verified: {'Yes' if push_verified else 'Needs attention'}")
@@ -526,7 +614,7 @@ def run_git_commands():
         
         # Save error to log file too
         error_log = [
-            f"GIT AUTO OPERATION FAILED",
+            f"GIT AUTO OPERATION FAILED - Version {CURRENT_VERSION}",
             f"Time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
             f"Error: {error_msg}",
             "",
@@ -629,10 +717,29 @@ def check_log_file_status():
     else:
         print(f"\nLog File Status: {log_file} does not exist yet.")
 
+def show_version_progression():
+    """Show how version progression will work"""
+    print("\n📈 Version Progression System:")
+    print("="*50)
+    print("Starting from: 1.1.3")
+    print("\nProgression rules:")
+    print("  1.1.3 -> 1.1.4 -> ... -> 1.1.99")
+    print("  1.1.99 -> 1.2.0 -> ... -> 1.2.99")
+    print("  1.2.99 -> 1.3.0 -> ... -> 1.99.0")
+    print("  1.99.0 -> 1.99.1 -> ... -> 1.99.99")
+    print("  1.99.99 -> 2.0.0 -> ... -> 2.0.99")
+    print("  2.0.99 -> 2.1.0 -> ...")
+    print("="*50)
+
 def main():
     """Main function"""
+    # Load current version
+    global CURRENT_VERSION
+    CURRENT_VERSION = load_version()
+    
     print("=== Automatic Git Script for Django Project ===\n")
-    print(f"Configuration:")
+    print(f"🎯 Current Version: {CURRENT_VERSION}")
+    print(f"\nConfiguration:")
     print(f"  - First {CONFIG['initial_checks']} checks: every {CONFIG['initial_interval']} seconds")
     print(f"  - After that: every {CONFIG['normal_interval']} seconds")
     print(f"  - Max retries: {CONFIG['max_retries']}")
@@ -641,6 +748,10 @@ def main():
     print(f"  - Log file: {CONFIG['log_file']}")
     print(f"  - Max log lines: {CONFIG['max_log_lines']}")
     print(f"  - Keep after rotation: {CONFIG['log_rotation_size']} lines")
+    print(f"  - Version file: {CONFIG['version_file']}")
+    
+    # Show version progression
+    show_version_progression()
     
     # Check log file status
     check_log_file_status()
@@ -651,11 +762,10 @@ def main():
         
         with open(CONFIG['log_file'], 'a', encoding='utf-8') as f:
             f.write(f"\n{'='*80}\n")
-            f.write(f"GIT AUTO SCRIPT STARTED\n")
+            f.write(f"GIT AUTO SCRIPT STARTED - Version {CURRENT_VERSION}\n")
             f.write(f"Time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"Configuration: {CONFIG}\n")
-            f.write(f"Max log lines: {CONFIG['max_log_lines']}\n")
-            f.write(f"Rotation size: {CONFIG['log_rotation_size']} lines\n")
+            f.write(f"Version progression: Auto-increment on each successful commit\n")
             f.write(f"{'='*80}\n")
         print(f"✓ Log file initialized: {CONFIG['log_file']}")
     except Exception as e:
@@ -698,6 +808,7 @@ def main():
             current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             print(f"\n{'='*60}")
             print(f"[{current_time}] Check #{check_count} (interval: {interval_type})")
+            print(f"📦 Current Version: {CURRENT_VERSION}")
             print(f"{'='*60}")
             
             # Check internet with detailed logging
@@ -755,6 +866,7 @@ def main():
             print(f"Status Summary:")
             print(f"{'─'*40}")
             print(f"  Total checks: {check_count}")
+            print(f"  Current version: {CURRENT_VERSION}")
             if check_count <= CONFIG['initial_checks']:
                 print(f"  Phase: Initial ({CONFIG['initial_checks'] - check_count} remaining)")
             else:
@@ -786,6 +898,7 @@ def main():
             print("🛑 Script stopped by user.")
             print(f"{'='*60}")
             print(f"Total checks performed: {check_count}")
+            print(f"Final version: {CURRENT_VERSION}")
             print(f"Last check time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             print(f"Final internet status: {'Connected' if last_internet_status else 'Disconnected'}")
             print(f"Pending operations: {'Yes' if pending_operations else 'No'}")
@@ -798,6 +911,7 @@ def main():
                 f"SCRIPT STOPPED BY USER",
                 f"Time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
                 f"Total checks performed: {check_count}",
+                f"Final version: {CURRENT_VERSION}",
                 f"Final internet status: {'Connected' if last_internet_status else 'Disconnected'}",
                 f"Pending operations: {'Yes' if pending_operations else 'No'}",
                 f"Log file: {CONFIG['log_file']}",
@@ -815,7 +929,8 @@ def main():
                 f"UNEXPECTED ERROR IN MAIN LOOP",
                 f"Time: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
                 f"Error: {error_msg}",
-                f"Check count: {check_count}"
+                f"Check count: {check_count}",
+                f"Current version: {CURRENT_VERSION}"
             ]
             save_to_log_file("\n".join(error_log))
             

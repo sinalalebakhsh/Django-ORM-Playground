@@ -79,4 +79,4 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
-[Next Steps ... → ](https://github.com/sinalalebakhsh/Django-ORM-Playground/blob/main/Steps_English.md)
+[All Steps from first development ... → ](https://github.com/sinalalebakhsh/Django-ORM-Playground/blob/main/Steps_English.md)
