@@ -68,10 +68,15 @@ CREATE DATABASE orm_playground;
 result:
 > orm_playground created
 
+* **if do not see it in Navigator -> SCHEMAS tab -> Right Click and Refresh all**
+  
+Now You can see it
 
 4. run in Terminal/CMD
 ```
 python manage.py makemigrations
 python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
 ```
 [Next Steps ... → ](https://github.com/sinalalebakhsh/Django-ORM-Playground/blob/main/Steps_English.md)
