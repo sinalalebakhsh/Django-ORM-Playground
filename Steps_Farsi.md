@@ -1499,3 +1499,10 @@ from .order import Order
 * ***debug کمتر***
 * ***اعتماد تیم بیشتر***
 
+## درک تفاوت select_related و prefetch_related
+قانون طلایی:
+
+| رابطه                 | ابزار            |
+| --------------------- | ---------------- |
+| ForeignKey / OneToOne | select_related   |
+| Many / Reverse FK     | prefetch_related |

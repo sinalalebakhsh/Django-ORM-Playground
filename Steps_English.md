@@ -1499,3 +1499,10 @@ If you understand this:
 * ***Less debugging***
 * ***More team trust***
 
+## Understanding the difference between select_related and prefetch_related
+The Golden Rule:
+
+| Relationship | Tools |
+| -------------------- | ---------------- |
+| ForeignKey / OneToOne | select_related |
+| Many / Reverse FK | prefetch_related |
