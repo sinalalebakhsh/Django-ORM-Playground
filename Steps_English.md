@@ -1347,7 +1347,7 @@ user.py
 from .order import Order
 
 class User(models.Model):
-pass
+  pass
 ```
 
 order.py
@@ -1364,4 +1364,99 @@ Because:
 
 * **user → order**
 * **order → user**
+
+### Why does Django sometimes tolerate this and sometimes not?
+
+Because:
+<br>
+Django loads models with the App Registry
+<br>
+and in a specific order at startup
+<br>
+But:
+
+* **in admin**
+* **in shell**
+* **in migrate**
+* **in test**
+
+⚠️ It may crash unexpectedly
+
+
+
+## ✅ Professional solutions (mem)
+Solution 1️⃣ (best and Django standard)
+<br>
+Using string reference in ForeignKey
+<br>
+order.py (correct):
+
+```
+class Order(models.Model):
+user = models.ForeignKey(
+'User',
+on_delete=models.CASCADE,
+related_name='orders'
+)
+```
+Or even safer:
+```
+class Order(models.Model):
+user = models.ForeignKey(
+'playground.User',
+on_delete=models.CASCADE
+)
+```
+#### 📌 This means:
+
+> "I'm saying the name of the model,
+> not the class itself"
+
+Django will resolve it later.
+
+#### Solution 2️⃣ (Import inside a function – only in special cases)
+```
+def some_function():
+  from .user import User
+```
+✔️ lazy import
+<br>
+❌ Not recommended for models unless you have to
+
+# Solution 3️⃣ (Separate Domain)
+When you see:
+
+* **user.py**
+* **order.py**
+* **payment.py**
+
+Everyone is importing each other
+<br>
+🚨 This means the architecture is warning
+
+Solution:
+
+* **Split the Domain**
+* **Create a separate App**
+
+#### The role of __init__.py in the import cycle
+
+__init__.py
+```
+from .user import User
+from .order import Order
+```
+### ⚠️ If you import order again inside user.py:
+* **Import becomes two-way**
+* **The probability of a cycle increases**
+
+# 📌 Rule:
+
+* **Models should only rely on string references**
+* **No direct imports**
+
+# Golden Rule (remember this)
+
+* ***Model → Model = string reference***
+* ***Service / Query → actual import***
 

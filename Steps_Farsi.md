@@ -1365,3 +1365,98 @@ class Order(models.Model):
 * **user → order**
 * **order → user**
 
+### Django چرا گاهی اینو تحمل می‌کنه و گاهی نه؟
+
+چون:
+<br>
+Django موقع startup
+<br>
+مدل‌ها رو با App Registry
+<br>
+و ترتیب خاصی load می‌کنه
+<br>
+ولی:
+
+* **در admin**
+* **در shell**
+* **در migrate**
+* **در تست**
+
+⚠️ ممکنه ناگهانی بترکه
+
+## ✅ راه‌حل‌های حرفه‌ای (مم)
+راه‌حل 1️⃣ (بهترین و استاندارد Django)
+<br>
+استفاده از string reference در ForeignKey
+<br>
+order.py (درست):
+
+```
+class Order(models.Model):
+    user = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='orders'
+    )
+```
+یا حتی امن‌تر:
+```
+class Order(models.Model):
+    user = models.ForeignKey(
+        'playground.User',
+        on_delete=models.CASCADE
+    )
+```
+#### 📌 این یعنی:
+
+> «اسم مدل رو می‌گم،
+> نه خود کلاس رو»
+
+Django بعداً خودش resolve می‌کنه.
+
+#### راه‌حل 2️⃣ (Import داخل تابع – فقط در موارد خاص)
+```
+def some_function():
+    from .user import User
+```
+✔️ import تنبل (lazy)
+<br>
+❌ برای مدل‌ها توصیه نمی‌شه مگر مجبور باشی
+
+# راه‌حل 3️⃣ (جدا کردن Domain)
+وقتی دیدی:
+
+* **user.py**
+* **order.py**
+* **payment.py**
+
+همه دارن همدیگه رو import می‌کنن
+<br>
+🚨 یعنی معماری داره هشدار می‌ده
+
+راه‌حل:
+
+* **Domain رو split کن**
+* **App جدا بساز**
+
+#### نقش __init__.py در import cycle
+
+__init__.py
+```
+from .user import User
+from .order import Order
+```
+### ⚠️ اگر داخل user.py دوباره order رو import کنی:
+* **import دوطرفه می‌شه**
+* **احتمال cycle بالا می‌ره**
+
+# 📌 قانون:
+
+* **مدل‌ها فقط به string reference تکیه کنن**
+* **نه import مستقیم**
+
+# قانون طلایی (این رو حفظ کن)
+
+* ***Model → Model = string reference***
+* ***Service / Query → import واقعی***
+
