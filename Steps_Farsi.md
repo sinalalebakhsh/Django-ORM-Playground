@@ -1506,3 +1506,9 @@ from .order import Order
 | --------------------- | ---------------- |
 | ForeignKey / OneToOne | select_related   |
 | Many / Reverse FK     | prefetch_related |
+
+
+# رابطه‌های ما:
+* ***Order → OrderItem ⟵ reverse FK → prefetch***
+* ***OrderItem → Product ⟵ FK → select***
+

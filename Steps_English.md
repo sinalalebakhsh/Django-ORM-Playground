@@ -1506,3 +1506,9 @@ The Golden Rule:
 | -------------------- | ---------------- |
 | ForeignKey / OneToOne | select_related |
 | Many / Reverse FK | prefetch_related |
+
+
+# Our relationships:
+* ***Order → OrderItem ⟵ reverse FK → prefetch***
+* ***OrderItem → Product ⟵ FK → select***
+

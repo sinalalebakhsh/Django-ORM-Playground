@@ -141,12 +141,16 @@ def check_via_ping_google():
         if sys.platform == 'win32':
             result = subprocess.run(['ping', '-n', '1', '8.8.8.8'], 
                                   timeout=CONFIG['timeout'], 
-                                  capture_output=True)
+                                  capture_output=True,
+                                  encoding='utf-8',
+                                  errors='ignore')
         # For Linux/Mac
         else:
             result = subprocess.run(['ping', '-c', '1', '8.8.8.8'], 
                                   timeout=CONFIG['timeout'], 
-                                  capture_output=True)
+                                  capture_output=True,
+                                  encoding='utf-8',
+                                  errors='ignore')
         return result.returncode == 0
     except:
         return False
@@ -158,12 +162,16 @@ def check_via_ping_cloudflare():
         if sys.platform == 'win32':
             result = subprocess.run(['ping', '-n', '1', '1.1.1.1'], 
                                   timeout=CONFIG['timeout'], 
-                                  capture_output=True)
+                                  capture_output=True,
+                                  encoding='utf-8',
+                                  errors='ignore')
         # For Linux/Mac
         else:
             result = subprocess.run(['ping', '-c', '1', '1.1.1.1'], 
                                   timeout=CONFIG['timeout'], 
-                                  capture_output=True)
+                                  capture_output=True,
+                                  encoding='utf-8',
+                                  errors='ignore')
         return result.returncode == 0
     except:
         return False
@@ -175,12 +183,16 @@ def check_via_nslookup():
         if sys.platform == 'win32':
             result = subprocess.run(['nslookup', 'google.com'], 
                                   timeout=CONFIG['timeout'], 
-                                  capture_output=True)
+                                  capture_output=True,
+                                  encoding='utf-8',
+                                  errors='ignore')
         # For Linux/Mac
         else:
             result = subprocess.run(['nslookup', 'google.com'], 
                                   timeout=CONFIG['timeout'], 
-                                  capture_output=True)
+                                  capture_output=True,
+                                  encoding='utf-8',
+                                  errors='ignore')
         return result.returncode == 0
     except:
         return False
@@ -188,10 +200,12 @@ def check_via_nslookup():
 def get_django_changes():
     """Check Django project changes and generate appropriate message"""
     try:
-        # Get git status
+        # Get git status with proper encoding
         status_result = subprocess.run(['git', 'status', '--porcelain'], 
                                       capture_output=True, 
-                                      text=True)
+                                      text=True,
+                                      encoding='utf-8',
+                                      errors='ignore')
         
         if not status_result.stdout.strip():
             return "No changes found"
@@ -204,6 +218,8 @@ def get_django_changes():
         deleted = []
         
         for change in changes:
+            if not change.strip():
+                continue
             status = change[:2].strip()
             file_path = change[3:]
             
@@ -255,7 +271,7 @@ def rotate_log_file_if_needed():
     
     try:
         # Count lines in current log file
-        with open(log_file, 'r', encoding='utf-8') as f:
+        with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
             lines = f.readlines()
         
         total_lines = len(lines)
@@ -311,7 +327,7 @@ def save_to_log_file(message, separator="="*60):
         
         # Check current log size after writing
         try:
-            with open(CONFIG['log_file'], 'r', encoding='utf-8') as f:
+            with open(CONFIG['log_file'], 'r', encoding='utf-8', errors='ignore') as f:
                 current_lines = len(f.readlines())
             print(f"  Current log size: {current_lines} lines")
         except:
@@ -339,65 +355,57 @@ def save_error_to_file(error_message):
     # Also save to main log file
     save_to_log_file(f"ERROR: {error_message}")
 
-def get_git_info():
-    """Get comprehensive git information"""
+def run_git_command_safe(cmd, description=""):
+    """Run git command safely with proper encoding"""
+    try:
+        if description:
+            print(f"\n{description}...")
+        
+        result = subprocess.run(cmd, 
+                              capture_output=True, 
+                              text=True,
+                              encoding='utf-8',
+                              errors='ignore')
+        
+        if result.returncode != 0:
+            error_msg = result.stderr.strip() if result.stderr else "Unknown error"
+            raise Exception(f"Command failed: {' '.join(cmd)} - {error_msg}")
+        
+        return result.stdout.strip()
+    except Exception as e:
+        raise Exception(f"Error running git command: {str(e)}")
+
+def get_git_info_safe():
+    """Get comprehensive git information safely"""
     git_info = {}
     
     try:
         # Get current branch
-        branch_result = subprocess.run(
-            ['git', 'branch', '--show-current'],
-            capture_output=True,
-            text=True
-        )
-        git_info['branch'] = branch_result.stdout.strip()
+        branch = run_git_command_safe(['git', 'branch', '--show-current'], "Getting current branch")
+        git_info['branch'] = branch
         
         # Get remote URL
-        remote_result = subprocess.run(
-            ['git', 'remote', '-v'],
-            capture_output=True,
-            text=True
-        )
-        git_info['remote'] = remote_result.stdout.strip()
+        remote = run_git_command_safe(['git', 'remote', '-v'], "Getting remote URLs")
+        git_info['remote'] = remote
         
         # Get last 5 commits
-        log_result = subprocess.run(
-            ['git', 'log', '--oneline', '-5'],
-            capture_output=True,
-            text=True
-        )
-        git_info['recent_commits'] = log_result.stdout.strip()
-        
-        # Get git status
-        status_result = subprocess.run(
-            ['git', 'status', '--porcelain'],
-            capture_output=True,
-            text=True
-        )
-        git_info['status'] = status_result.stdout.strip()
+        try:
+            log_result = subprocess.run(['git', 'log', '--oneline', '-5'], 
+                                       capture_output=True, 
+                                       text=True,
+                                       encoding='utf-8',
+                                       errors='ignore')
+            git_info['recent_commits'] = log_result.stdout.strip() if log_result.stdout else "No commits yet"
+        except:
+            git_info['recent_commits'] = "Could not retrieve commits"
         
         # Get git config user info
-        user_name = subprocess.run(
-            ['git', 'config', 'user.name'],
-            capture_output=True,
-            text=True
-        ).stdout.strip()
-        
-        user_email = subprocess.run(
-            ['git', 'config', 'user.email'],
-            capture_output=True,
-            text=True
-        ).stdout.strip()
-        
-        git_info['user'] = f"{user_name} <{user_email}>"
-        
-        # Get total commits
-        count_result = subprocess.run(
-            ['git', 'rev-list', '--count', 'HEAD'],
-            capture_output=True,
-            text=True
-        )
-        git_info['total_commits'] = count_result.stdout.strip()
+        try:
+            user_name = run_git_command_safe(['git', 'config', 'user.name'], "Getting git user name")
+            user_email = run_git_command_safe(['git', 'config', 'user.email'], "Getting git user email")
+            git_info['user'] = f"{user_name} <{user_email}>"
+        except:
+            git_info['user'] = "Not configured"
         
         return git_info
         
@@ -409,36 +417,37 @@ def verify_git_push():
     """Verify that push was successful by checking local vs remote"""
     try:
         # Get latest local commit
-        local_commit = subprocess.run(
-            ['git', 'rev-parse', 'HEAD'],
-            capture_output=True,
-            text=True
-        ).stdout.strip()
+        local_commit = run_git_command_safe(['git', 'rev-parse', 'HEAD'], "Getting local commit")
         
         # Get latest remote commit
-        remote_commit = subprocess.run(
-            ['git', 'ls-remote', 'origin', f'refs/heads/{CONFIG["branch"]}'],
-            capture_output=True,
-            text=True
-        ).stdout.split()[0].strip()
+        try:
+            remote_output = run_git_command_safe(['git', 'ls-remote', 'origin', f'refs/heads/{CONFIG["branch"]}'], 
+                                                "Getting remote commit")
+            if remote_output:
+                remote_commit = remote_output.split()[0].strip()
+            else:
+                remote_commit = None
+        except:
+            remote_commit = None
         
         # Get commit messages for comparison
-        local_msg = subprocess.run(
-            ['git', 'log', '--oneline', '-1'],
-            capture_output=True,
-            text=True
-        ).stdout.strip()
+        local_msg = run_git_command_safe(['git', 'log', '--oneline', '-1'], "Getting commit message")
         
         print(f"\nPush Verification:")
-        print(f"  Local commit:  {local_commit[:8]}... - {local_msg}")
-        print(f"  Remote commit: {remote_commit[:8]}...")
+        if local_commit:
+            print(f"  Local commit:  {local_commit[:8]}...")
+        if remote_commit:
+            print(f"  Remote commit: {remote_commit[:8]}...")
         
-        if local_commit == remote_commit:
+        if remote_commit and local_commit == remote_commit:
             print(f"  ✓ Push verified: Local and remote are synchronized")
             return True, local_commit, remote_commit, local_msg
-        else:
+        elif remote_commit:
             print(f"  ⚠ Warning: Local and remote differ")
             return False, local_commit, remote_commit, local_msg
+        else:
+            print(f"  ℹ Could not verify push (no remote commit)")
+            return True, local_commit, None, local_msg
             
     except Exception as e:
         print(f"  ✗ Could not verify push: {str(e)}")
@@ -475,13 +484,16 @@ def run_git_commands():
         print("\n1. Running git add ...")
         add_result = subprocess.run(['git', 'add', '.'], 
                                    capture_output=True, 
-                                   text=True)
+                                   text=True,
+                                   encoding='utf-8',
+                                   errors='ignore')
         
         if add_result.returncode != 0:
             raise Exception(f"Error in git add: {add_result.stderr}")
         
         log_content.append(f"✓ git add completed")
-        log_content.append(f"Output: {add_result.stdout.strip()}")
+        if add_result.stdout.strip():
+            log_content.append(f"Output: {add_result.stdout.strip()}")
         log_content.append("")
         print("   ✓ git add completed")
         
@@ -504,29 +516,22 @@ def run_git_commands():
         print("\n2. Running git commit ...")
         commit_result = subprocess.run(['git', 'commit', '-m', commit_msg], 
                                       capture_output=True, 
-                                      text=True)
+                                      text=True,
+                                      encoding='utf-8',
+                                      errors='ignore')
         
         if commit_result.returncode != 0:
             raise Exception(f"Error in git commit: {commit_result.stderr}")
         
         # Get commit hash for reference
-        commit_hash = subprocess.run(
-            ['git', 'rev-parse', '--short', 'HEAD'],
-            capture_output=True,
-            text=True
-        ).stdout.strip()
-        
-        commit_full_hash = subprocess.run(
-            ['git', 'rev-parse', 'HEAD'],
-            capture_output=True,
-            text=True
-        ).stdout.strip()
+        commit_hash = run_git_command_safe(['git', 'rev-parse', '--short', 'HEAD'], "Getting commit hash")
         
         log_content.append(f"✓ git commit completed")
         log_content.append(f"Version: {CURRENT_VERSION}")
-        log_content.append(f"Commit Hash: {commit_hash} ({commit_full_hash})")
+        log_content.append(f"Commit Hash: {commit_hash}")
         log_content.append(f"Commit Message:\n{commit_msg}")
-        log_content.append(f"Output: {commit_result.stdout.strip()}")
+        if commit_result.stdout.strip():
+            log_content.append(f"Output: {commit_result.stdout.strip()}")
         log_content.append("")
         print(f"   ✓ git commit completed (commit: {commit_hash}, version: {CURRENT_VERSION})")
         
@@ -536,14 +541,17 @@ def run_git_commands():
         print(f"\n3. Running git push to {CONFIG['branch']} branch...")
         push_result = subprocess.run(['git', 'push', '-u', 'origin', CONFIG['branch']], 
                                     capture_output=True, 
-                                    text=True)
+                                    text=True,
+                                    encoding='utf-8',
+                                    errors='ignore')
         
         if push_result.returncode != 0:
             raise Exception(f"Error in git push: {push_result.stderr}")
         
         log_content.append(f"✓ git push completed")
         log_content.append(f"Branch: {CONFIG['branch']}")
-        log_content.append(f"Output: {push_result.stdout.strip()}")
+        if push_result.stdout.strip():
+            log_content.append(f"Output: {push_result.stdout.strip()}")
         log_content.append("")
         print(f"   ✓ git push completed")
         
@@ -560,8 +568,9 @@ def run_git_commands():
         else:
             log_content.append("⚠ Push verification warning")
         
-        if local_commit and remote_commit:
+        if local_commit:
             log_content.append(f"Local Commit:  {local_commit}")
+        if remote_commit:
             log_content.append(f"Remote Commit: {remote_commit}")
             log_content.append(f"Match: {'Yes' if local_commit == remote_commit else 'No'}")
         
@@ -571,23 +580,21 @@ def run_git_commands():
         log_content.append("-" * 40)
         
         # Get comprehensive git info
-        git_info = get_git_info()
+        git_info = get_git_info_safe()
         
         if 'error' in git_info:
             log_content.append(f"Error getting git info: {git_info['error']}")
         else:
             log_content.append(f"Current Branch: {git_info.get('branch', 'N/A')}")
             log_content.append(f"Git User: {git_info.get('user', 'N/A')}")
-            log_content.append(f"Total Commits: {git_info.get('total_commits', 'N/A')}")
             log_content.append("")
-            log_content.append("Remote URLs:")
-            log_content.append(git_info.get('remote', 'N/A'))
+            if git_info.get('remote'):
+                log_content.append("Remote URLs:")
+                log_content.append(git_info.get('remote', 'N/A'))
             log_content.append("")
-            log_content.append("Recent Commits (last 5):")
-            log_content.append(git_info.get('recent_commits', 'N/A'))
-            log_content.append("")
-            log_content.append("Current Status:")
-            log_content.append(git_info.get('status', 'N/A') if git_info.get('status') else "Clean working directory")
+            if git_info.get('recent_commits'):
+                log_content.append("Recent Commits (last 5):")
+                log_content.append(git_info.get('recent_commits', 'N/A'))
         
         log_content.append("")
         log_content.append("OPERATION COMPLETED SUCCESSFULLY")
@@ -645,41 +652,53 @@ def get_interval_info(check_count):
     
     return interval, interval_type
 
-def print_git_info():
-    """Print git information for debugging"""
+def print_git_info_safe():
+    """Print git information for debugging safely"""
+    print("\nGit Information:")
+    
     try:
-        print("\nGit Information:")
-        
         # Get current branch
-        branch_result = subprocess.run(
-            ['git', 'branch', '--show-current'],
-            capture_output=True,
-            text=True
-        )
-        current_branch = branch_result.stdout.strip()
-        print(f"  Current branch: {current_branch}")
+        branch_result = subprocess.run(['git', 'branch', '--show-current'], 
+                                      capture_output=True, 
+                                      text=True,
+                                      encoding='utf-8',
+                                      errors='ignore')
+        if branch_result.stdout.strip():
+            print(f"  Current branch: {branch_result.stdout.strip()}")
+        else:
+            print(f"  Current branch: Not available")
         
         # Get remote URL
-        remote_result = subprocess.run(
-            ['git', 'remote', '-v'],
-            capture_output=True,
-            text=True
-        )
-        print(f"  Remote URLs:")
-        for line in remote_result.stdout.strip().split('\n'):
-            if line:
-                print(f"    {line}")
+        remote_result = subprocess.run(['git', 'remote', '-v'], 
+                                      capture_output=True, 
+                                      text=True,
+                                      encoding='utf-8',
+                                      errors='ignore')
+        if remote_result.stdout.strip():
+            print(f"  Remote URLs:")
+            for line in remote_result.stdout.strip().split('\n'):
+                if line.strip():
+                    # Clean the line for display
+                    clean_line = line.encode('ascii', 'ignore').decode('ascii', 'ignore')
+                    print(f"    {clean_line}")
         
-        # Get last few commits
-        log_result = subprocess.run(
-            ['git', 'log', '--oneline', '-3'],
-            capture_output=True,
-            text=True
-        )
-        print(f"  Recent commits:")
-        for line in log_result.stdout.strip().split('\n'):
-            if line:
-                print(f"    {line}")
+        # Get last few commits (skip if there are encoding issues)
+        try:
+            log_result = subprocess.run(['git', 'log', '--oneline', '-3'], 
+                                       capture_output=True, 
+                                       text=True,
+                                       encoding='utf-8',
+                                       errors='ignore')
+            if log_result.stdout.strip():
+                print(f"  Recent commits:")
+                lines = log_result.stdout.strip().split('\n')
+                for i, line in enumerate(lines[:3]):
+                    if line.strip():
+                        # Clean the line for display
+                        clean_line = line.encode('ascii', 'ignore').decode('ascii', 'ignore')
+                        print(f"    {clean_line}")
+        except:
+            print(f"  Recent commits: Could not retrieve")
                 
     except Exception as e:
         print(f"  Could not retrieve git info: {str(e)}")
@@ -690,7 +709,7 @@ def check_log_file_status():
     
     if os.path.exists(log_file):
         try:
-            with open(log_file, 'r', encoding='utf-8') as f:
+            with open(log_file, 'r', encoding='utf-8', errors='ignore') as f:
                 lines = f.readlines()
             
             line_count = len(lines)
@@ -771,8 +790,8 @@ def main():
     except Exception as e:
         print(f"✗ Error initializing log file: {str(e)}")
     
-    # Print git info
-    print_git_info()
+    # Print git info safely
+    print_git_info_safe()
     
     # Test internet methods
     print("\nTesting internet connection methods:")
@@ -960,7 +979,9 @@ if __name__ == "__main__":
         branch_result = subprocess.run(
             ['git', 'branch', '--show-current'],
             capture_output=True,
-            text=True
+            text=True,
+            encoding='utf-8',
+            errors='ignore'
         )
         if branch_result.stdout.strip():
             CONFIG['branch'] = branch_result.stdout.strip()
@@ -969,3 +990,4 @@ if __name__ == "__main__":
     
     main()
 
+    
