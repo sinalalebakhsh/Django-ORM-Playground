@@ -35,7 +35,7 @@ DATABASES = {
     }
 }
 ```
-2. Install pipenv and install preneeds 
+2. Install dependencies (Pipfile):
 ```
 pip install pipenv
 ```
