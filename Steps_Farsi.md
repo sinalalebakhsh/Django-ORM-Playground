@@ -1340,3 +1340,28 @@ ImportError: cannot import name 'A'
 * **file_b می‌گه: اول file_a**
 * **پایتون: 😐**
 
+# ❌ سناریوی خطرناک (خیلی رایج)
+user.py
+
+```
+from .order import Order
+
+class User(models.Model):
+    pass
+```
+
+order.py
+
+```
+from .user import User
+
+class Order(models.Model):
+    user = models.ForeignKey(User, ...)
+```
+❌ این دقیقاً یک import cycle است
+<br>
+چون:
+
+* **user → order**
+* **order → user**
+

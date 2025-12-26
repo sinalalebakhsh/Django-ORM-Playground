@@ -1340,3 +1340,28 @@ Why?
 * **file_b says: file_a first**
 * **Python: 😐**
 
+# ❌ Dangerous scenario (very common)
+user.py
+
+```
+from .order import Order
+
+class User(models.Model):
+pass
+```
+
+order.py
+
+```
+from .user import User
+
+class Order(models.Model):
+user = models.ForeignKey(User, ...)
+```
+❌ This is exactly an import cycle
+<br>
+Because:
+
+* **user → order**
+* **order → user**
+
