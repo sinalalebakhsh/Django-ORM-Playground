@@ -53,6 +53,14 @@ Ctrl+P
 
 > Python: Select Interpreter
 
+
+5. MySQL Workbench:
+Create 
+```
+DROP DATABASE orm_playground;
+CREATE DATABASE orm_playground;
+```
+
 4. run in Terminal/CMD
 ```
 python manage.py makemigrations
