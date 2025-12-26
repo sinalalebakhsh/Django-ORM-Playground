@@ -1512,3 +1512,41 @@ from .order import Order
 * ***Order → OrderItem ⟵ reverse FK → prefetch***
 * ***OrderItem → Product ⟵ FK → select***
 
+# حل کامل ولی حرفه‌ای (دو مرحله‌ای)
+
+ما اول می‌خوایم:
+<br>
+Order‌ها رو بگیریم
+<br>
+OrderItem‌ها رو یکجا
+<br>
+Product‌ها رو هم همون موقع بکشیم بالا
+<br>
+قدم ۴.۱: Query به OrderItem بهینه
+
+```
+from playground.models import OrderItem
+
+order_items_qs = OrderItem.objects.select_related('product')
+```
+
+### 🔍 این یعنی:
+
+> «هر OrderItem که میاری
+> Product مربوط بهش رو هم با JOIN بیار»
+
+قدم ۴.۲: اتصالش به Order
+
+```
+orders = Order.objects.prefetch_related(
+    'items'
+)
+```
+اما این هنوز OrderItem خام میاره.
+<br>
+اینجاست که Prefetch معنی پیدا می‌کنه
+<br>
+Prefetch یعنی چی؟
+
+> «من فقط نمی‌خوام prefetch کنم
+> می‌خوام کنترل کنم چی prefetch بشه»
