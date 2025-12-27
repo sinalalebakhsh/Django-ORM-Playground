@@ -1539,8 +1539,8 @@ Step 4.2: Join it to Order
 
 ```
 orders = Order.objects.prefetch_related(
-'items'
-)
+  'items'
+  )
 ```
 But this still returns a raw OrderItem.
 <br>
