@@ -86,24 +86,22 @@ def run_product_url(request):
         product_count=Subquery(products_count_subquery)
     )
     list(categories)
+
+    ### another
+        most_expensive_product = (
+            Product.objects
+            .filter(category=OuterRef("pk"))
+            .order_by("-price")
+        )
+
+        categories = Category.objects.annotate(
+            top_product_name=Subquery(
+                most_expensive_product.values("name")[:1]
+            ),
+            top_product_price=Subquery(
+                most_expensive_product.values("price")[:1]
+            )
+        )
     """
 
-    most_expensive_product = (
-        Product.objects
-        .filter(category=OuterRef("pk"))
-        .order_by("-price")
-    )
-
-    categories = Category.objects.annotate(
-        top_product_name=Subquery(
-            most_expensive_product.values("name")[:1]
-        ),
-        top_product_price=Subquery(
-            most_expensive_product.values("price")[:1]
-        )
-    )
-
-    return render(request, 'sina.html',{
-        'categories':categories,
-        'expensive_product':most_expensive_product,
-        })
+    return render(request, 'sina.html')
